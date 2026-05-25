@@ -1,4 +1,4 @@
-console.log('NEW VERSION TEST')
+
 import { Html5QrcodeScanner } from 'html5-qrcode'
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from './lib/supabase'
