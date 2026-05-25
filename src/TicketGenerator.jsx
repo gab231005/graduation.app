@@ -96,16 +96,19 @@ function TicketGenerator() {
 
   const colors = {
     primary: '#2563eb',
-    textMain: '#c5d6ff',
+    textMain: '#0b1a33',
     textMuted: '#64748b',
     border: '#dbe4f0',
     premiumBg: '#0f172a',
     premiumAccent: '#facc15',
     standardBg: '#ffffff',
+    participantBg: '#0b1a33',
+    participantAccent: '#d4af37',
+    participantText: '#ffffff',
   }
 
   return (
-    <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif', padding: '24px 20px 40px' }}>
+    <div style={{ fontFamily: 'Segoe UI, sans-serif', padding: '24px 20px 40px' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <p style={{ margin: 0, color: colors.primary, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1.1px', fontSize: '12px' }}>
@@ -205,83 +208,90 @@ function TicketGenerator() {
                   style={{
                     width: '100%',
                     minHeight: '240px',
-                    borderRadius: '22px',
+                    borderRadius: '10px',
                     display: 'flex',
                     overflow: 'hidden',
-                    boxShadow: '0 18px 40px rgba(15, 23, 42, 0.12)',
-                    backgroundColor: isGraduate ? colors.premiumBg : colors.standardBg,
-                    color: isGraduate ? '#ffffff' : colors.textMain,
-                    border: `1px solid ${isGraduate ? '#1e293b' : colors.border}`,
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                    backgroundColor: isGraduate ? colors.premiumBg : colors.participantBg,
+                    color: isGraduate ? '#ffffff' : colors.participantText,
+                    border: `1px solid ${isGraduate ? '#1e293b' : 'transparent'}`,
                   }}
                 >
-                  <div style={{ flex: 1, padding: '28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div
+                    style={{
+                      flex: 2,
+                      padding: '20px',
+                      borderRight: isGraduate ? '2px dashed #d4af37' : '2px dashed #d4af37',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     <div>
-                      <span
+                      <div
                         style={{
-                          display: 'inline-block',
-                          padding: '4px 10px',
-                          borderRadius: '999px',
-                          backgroundColor: isGraduate ? 'rgba(250, 204, 21, 0.16)' : '#eff6ff',
-                          color: isGraduate ? colors.premiumAccent : colors.primary,
+                          color: isGraduate ? colors.premiumAccent : colors.participantAccent,
                           fontWeight: 800,
-                          fontSize: '11px',
+                          letterSpacing: '1px',
+                          fontSize: '12px',
                           textTransform: 'uppercase',
-                          letterSpacing: '0.7px',
-                          marginBottom: '12px',
                         }}
                       >
-                        {isGraduate ? '黑金票' : '白蓝票'}
-                      </span>
-                      <h3 style={{ margin: 0, fontSize: '28px', fontWeight: 900, letterSpacing: '-0.5px' }}>
+                        🎓 GRADUATION BOARDING PASS
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '1.5em',
+                          fontWeight: 900,
+                          margin: '10px 0',
+                        }}
+                      >
                         {person.name}
-                      </h3>
+                      </div>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '28px', marginTop: '24px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', marginTop: '10px', textAlign: 'center' }}>
                       {[
-                        ['Flight', FLIGHT_NO],
-                        ['Seat', seat],
-                        ['Time', TIME],
+                        ['FLIGHT', FLIGHT_NO],
+                        ['SEAT', seat],
+                        ['TIME', TIME],
                       ].map(([label, value]) => (
-                        <div key={label}>
-                          <p style={{ margin: 0, fontSize: '11px', fontWeight: 800, color: isGraduate ? '#cbd5e1' : colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                            {label}
-                          </p>
-                          <p style={{ margin: '6px 0 0', fontSize: '20px', fontWeight: 900 }}>{value}</p>
+                        <div key={label} style={{ flex: 1 }}>
+                          <div style={{ fontWeight: 800, fontSize: '12px', textTransform: 'uppercase', marginBottom: '4px' }}>{label}</div>
+                          <div style={{ fontWeight: 900, fontSize: '18px' }}>{value}</div>
                         </div>
                       ))}
                     </div>
 
-                    <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: `1px solid ${isGraduate ? '#334155' : colors.border}` }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px' }}>
-                        <p style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: isGraduate ? '#cbd5e1' : colors.textMuted }}>
-                          <strong>Route:</strong> {ROUTE}
-                        </p>
-                        <p style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: isGraduate ? '#cbd5e1' : colors.textMuted }}>
-                          Graduation Ceremony
-                        </p>
-                      </div>
+                    <div style={{ marginTop: '20px', fontWeight: 800 }}>
+                      <div>ROUTE: {ROUTE}</div>
+                      <div style={{ marginTop: '2px' }}>Graduation Ceremony</div>
                     </div>
                   </div>
 
                   <div
                     style={{
-                      width: '210px',
-                      padding: '24px',
+                      flex: 1,
+                      padding: '20px',
+                      backgroundColor: isGraduate ? '#111827' : colors.participantBg,
+                      color: isGraduate ? '#ffffff' : colors.participantAccent,
+                      textAlign: 'center',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      backgroundColor: isGraduate ? '#111827' : '#f8fafc',
-                      borderLeft: `2px dashed ${isGraduate ? '#334155' : '#cbd5e1'}`,
                     }}
                   >
-                    <div style={{ backgroundColor: '#ffffff', padding: '10px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                    <div
+                      style={{
+                        backgroundColor: '#ffffff',
+                        padding: '10px',
+                        borderRadius: '8px',
+                      }}
+                    >
                       <QRCodeCanvas value={JSON.stringify(qrData)} size={120} level="H" />
                     </div>
-                    <p style={{ margin: '16px 0 0', fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.7px', color: isGraduate ? '#cbd5e1' : colors.textMuted }}>
-                      Scan to Board
-                    </p>
+                    <div style={{ marginTop: '12px', fontWeight: 800 }}>SCAN TO BOARD</div>
                   </div>
                 </div>
 
