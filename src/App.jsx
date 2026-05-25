@@ -1,11 +1,32 @@
 import { Html5QrcodeScanner } from 'html5-qrcode'
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from './lib/supabase'
-
+<input
+  value={scannerName}
+  onChange={(e) => {
+    setScannerName(e.target.value)
+    localStorage.setItem('scanner_name', e.target.value)
+  }}
+  placeholder="请输入委员名字"
+  style={{
+    padding: '12px',
+    borderRadius: '12px',
+    border: '1px solid #ccc',
+    width: '100%',
+    marginBottom: '20px'
+  }}
+/>
 const FLIGHT = 'GD2026'
 const ROUTE = 'BKI to FUTURE'
 const TIME = '18:00'
-
+const [scannerName, setScannerName] = useState(
+  localStorage.getItem('scanner_name') || ''
+)
+const [stats, setStats] = useState({
+  boarded: 0,
+  total: 0
+})
+const [latestBoarded, setLatestBoarded] = useState(null)
 const normalizeSeat = (value) => {
   const cleaned = String(value ?? '').replace(/\D/g, '')
 
@@ -84,12 +105,71 @@ function App() {
     oscillator.start()
     oscillator.stop(context.currentTime + 0.34)
   }
+  useEffect(() => {
+  const channel = supabase
+    .channel('welcome-screen')
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'guests'
+      },
+      (payload) => {
+        if (payload.new.boarded) {
+          setLatestBoarded(payload.new)
+        }
+      }
+    )
+    .subscribe()
 
+  return () => {
+    supabase.removeChannel(channel)
+  }
+}, [])
   useEffect(() => {
     if (!supabase) {
       setConfigWarning('当前未配置 Supabase，二维码解析仍可展示本地票据信息。请在 Vercel 或本地环境填入 VITE_SUPABASE_URL 和 VITE_SUPABASE_ANON_KEY。')
     }
   }, [])
+
+  useEffect(() => {
+  loadStats()
+
+  const channel = supabase
+    .channel('guest-updates')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'guests'
+      },
+      () => {
+        loadStats()
+      }
+    )
+    .subscribe()
+    const loadStats = async () => {
+  const { count: total } = await supabase
+    .from('guests')
+    .select('*', { count: 'exact', head: true })
+
+  const { count: boarded } = await supabase
+    .from('guests')
+    .select('*', { count: 'exact', head: true })
+    .eq('boarded', true)
+
+  setStats({
+    boarded: boarded || 0,
+    total: total || 0
+  })
+}
+
+  return () => {
+    supabase.removeChannel(channel)
+  }
+}, [])
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
@@ -108,7 +188,6 @@ function App() {
       if (!trimmed || trimmed === lastScannedRef.current) {
         return
       }
-
       lastScannedRef.current = trimmed
       processingRef.current = true
       setIsProcessing(true)
@@ -121,49 +200,89 @@ function App() {
 
         if (!baseGuest?.id || !baseGuest.name) {
           setScanStatus('warning')
-          setMessage('❌ 票据二维码无效，请扫描正确的登机牌。')
+          setMessage('❌ 无效登机牌的登机牌。')
           setScannedGuest(null)
-          setScanPulse(false)
-          setShowWelcomeBurst(false)
           return
         }
 
-        let mergedGuest = { ...baseGuest }
-
-        if (supabase) {
-          const { data: guestRecord, error: fetchError } = await supabase
-            .from('guests')
-            .select('id,name,group_num,type')
-            .eq('id', baseGuest.id)
-            .single()
-
-          if (!fetchError && guestRecord) {
-            mergedGuest = {
-              ...mergedGuest,
-              name: guestRecord.name ?? baseGuest.name,
-              seat: normalizeSeat(guestRecord.group_num ?? baseGuest.seat),
-              class: guestRecord.type === 'graduate' ? 'business' : baseGuest.class,
-            }
-          }
+        if (!supabase) {
+          setMessage('❌ Supabase 未连接')
+          return
         }
 
+        // 调用 RPC
+        const { data, error } = await supabase.rpc(
+          'board_guest',
+          {
+            p_id: baseGuest.id,
+            p_scanned_by: localStorage.getItem('scanner_name') || 'Unknown Scanner'
+          }
+        )
+
+        if (error) {
+          console.error(error)
+
+          setScanStatus('warning')
+          setMessage('❌ 数据库错误')
+          return
+        }
+
+          // 已经登机
+        if (!data.success) {
+          setScanStatus('warning')
+          setMessage(`❌ ${data.name || '该乘客'} 已经登机`)
+          setScannedGuest(null)
+          return
+        }
+
+        // 拉最新资料
+        const { data: guestRecord } = await supabase
+          .from('guests')
+          .select('*')
+          .eq('id', baseGuest.id)
+          .single()
+        const mergedGuest = {
+          ...baseGuest,
+          name: guestRecord.name,
+          seat: normalizeSeat(guestRecord.group_num),
+          class: guestRecord.type === 'graduate'
+            ? 'business'
+            : 'economy'
+        }
         setScannedGuest(mergedGuest)
-        setMessage(`🎉 欢迎登机，${mergedGuest.name}！`)
+
+        setMessage(`🎉 欢迎登机，${mergedGuest.name}`)
+
         setScanStatus('success')
+
         playSuccessSound()
+
         setShowWelcomeBurst(true)
         setScanPulse(true)
-        window.setTimeout(() => setScanPulse(false), 900)
-        window.setTimeout(() => setShowWelcomeBurst(false), 2200)
+
+        window.setTimeout(() => {
+          setScanPulse(false)
+        }, 900)
+
+        window.setTimeout(() => {
+          setShowWelcomeBurst(false)
+        }, 2200)
+
       } catch (error) {
+        console.error(error)
+
         setScanStatus('warning')
-        setMessage('❌ 二维码解析失败，请扫描合法的登机牌。')
+        setMessage('❌ QR 解析失败')
         setScannedGuest(null)
-        setScanPulse(false)
-        setShowWelcomeBurst(false)
+
       } finally {
         setIsProcessing(false)
         processingRef.current = false
+
+        // 3 秒后允许再次扫描
+        setTimeout(() => {
+          lastScannedRef.current = ''
+        }, 3000)
       }
     })
 
@@ -171,7 +290,7 @@ function App() {
       processingRef.current = false
       scanner.clear().catch(() => {})
     }
-  }, [])
+  }, [scannerName])
 
   const colors = {
     bg: '#f4f7fb',
