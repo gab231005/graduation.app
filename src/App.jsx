@@ -1,34 +1,11 @@
-
-import { Html5QrcodeScanner } from 'html5-qrcode'
+﻿import { Html5QrcodeScanner } from 'html5-qrcode'
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from './lib/supabase'
 
-<input
-  value={scannerName}
-  onChange={(e) => {
-    setScannerName(e.target.value)
-    localStorage.setItem('scanner_name', e.target.value)
-  }}
-  placeholder="请输入委员名字"
-  style={{
-    padding: '12px',
-    borderRadius: '12px',
-    border: '1px solid #ccc',
-    width: '100%',
-    marginBottom: '20px'
-  }}
-/>
 const FLIGHT = 'GD2026'
 const ROUTE = 'BKI to FUTURE'
 const TIME = '18:00'
-const [scannerName, setScannerName] = useState(
-  localStorage.getItem('scanner_name') || ''
-)
-const [stats, setStats] = useState({
-  boarded: 0,
-  total: 0
-})
-const [latestBoarded, setLatestBoarded] = useState(null)
+
 const normalizeSeat = (value) => {
   const cleaned = String(value ?? '').replace(/\D/g, '')
 
@@ -57,11 +34,15 @@ const normalizeGuest = (payload) => {
     flight: payload.flight ?? FLIGHT,
     time: payload.time ?? TIME,
     destination: payload.destination ?? ROUTE,
-    class: guestClass === 'graduate' || guestClass === 'business' || guestClass === 'vip' ? 'business' : 'economy',
+    class:
+      guestClass === 'graduate' || guestClass === 'business' || guestClass === 'vip'
+        ? 'business'
+        : 'economy',
   }
 }
 
 function App() {
+  const [scannerName, setScannerName] = useState(() => localStorage.getItem('scanner_name') || '')
   const [message, setMessage] = useState('请扫描票据二维码开始登机。')
   const [scanStatus, setScanStatus] = useState('success')
   const [isProcessing, setIsProcessing] = useState(false)
@@ -69,10 +50,34 @@ function App() {
   const [configWarning, setConfigWarning] = useState('')
   const [showWelcomeBurst, setShowWelcomeBurst] = useState(false)
   const [scanPulse, setScanPulse] = useState(false)
+  const [stats, setStats] = useState({
+    boarded: 0,
+    total: 0,
+  })
 
   const processingRef = useRef(false)
   const lastScannedRef = useRef('')
   const audioContextRef = useRef(null)
+
+  const loadStats = async () => {
+    if (!supabase) {
+      return
+    }
+
+    const { count: total } = await supabase
+      .from('guests')
+      .select('*', { count: 'exact', head: true })
+
+    const { count: boarded } = await supabase
+      .from('guests')
+      .select('*', { count: 'exact', head: true })
+      .eq('boarded', true)
+
+    setStats({
+      boarded: boarded || 0,
+      total: total || 0,
+    })
+  }
 
   const playSuccessSound = () => {
     const AudioContext = window.AudioContext || window.webkitAudioContext
@@ -107,71 +112,71 @@ function App() {
     oscillator.start()
     oscillator.stop(context.currentTime + 0.34)
   }
-  useEffect(() => {
-  const channel = supabase
-    .channel('welcome-screen')
-    .on(
-      'postgres_changes',
-      {
-        event: 'UPDATE',
-        schema: 'public',
-        table: 'guests'
-      },
-      (payload) => {
-        if (payload.new.boarded) {
-          setLatestBoarded(payload.new)
-        }
-      }
-    )
-    .subscribe()
 
-  return () => {
-    supabase.removeChannel(channel)
-  }
-}, [])
   useEffect(() => {
     if (!supabase) {
-      setConfigWarning('当前未配置 Supabase，二维码解析仍可展示本地票据信息。请在 Vercel 或本地环境填入 VITE_SUPABASE_URL 和 VITE_SUPABASE_ANON_KEY。')
+      setConfigWarning(
+        '当前未配置 Supabase，二维码解析仍可展示本地票据信息。请在 Vercel 或本地环境填入 VITE_SUPABASE_URL 和 VITE_SUPABASE_ANON_KEY。'
+      )
+      return
+    }
+
+    setConfigWarning('')
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) {
+      return
+    }
+
+    loadStats()
+
+    const channel = supabase
+      .channel('guest-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'guests',
+        },
+        () => {
+          loadStats()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
     }
   }, [])
 
   useEffect(() => {
-  loadStats()
+    if (!supabase) {
+      return
+    }
 
-  const channel = supabase
-    .channel('guest-updates')
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'guests'
-      },
-      () => {
-        loadStats()
-      }
-    )
-    .subscribe()
-    const loadStats = async () => {
-  const { count: total } = await supabase
-    .from('guests')
-    .select('*', { count: 'exact', head: true })
+    const channel = supabase
+      .channel('welcome-screen')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'guests',
+        },
+        (payload) => {
+          if (payload.new.boarded) {
+            setScannedGuest(payload.new)
+          }
+        }
+      )
+      .subscribe()
 
-  const { count: boarded } = await supabase
-    .from('guests')
-    .select('*', { count: 'exact', head: true })
-    .eq('boarded', true)
-
-  setStats({
-    boarded: boarded || 0,
-    total: total || 0
-  })
-}
-
-  return () => {
-    supabase.removeChannel(channel)
-  }
-}, [])
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [])
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
@@ -190,6 +195,7 @@ function App() {
       if (!trimmed || trimmed === lastScannedRef.current) {
         return
       }
+
       lastScannedRef.current = trimmed
       processingRef.current = true
       setIsProcessing(true)
@@ -212,24 +218,18 @@ function App() {
           return
         }
 
-        // 调用 RPC
-        const { data, error } = await supabase.rpc(
-          'board_guest',
-          {
-            p_id: baseGuest.id,
-            p_scanned_by: localStorage.getItem('scanner_name') || 'Unknown Scanner'
-          }
-        )
+        const { data, error } = await supabase.rpc('board_guest', {
+          p_id: baseGuest.id,
+          p_scanned_by: scannerName || 'Unknown Scanner',
+        })
 
         if (error) {
           console.error(error)
-
           setScanStatus('warning')
           setMessage('❌ 数据库错误')
           return
         }
 
-          // 已经登机
         if (!data.success) {
           setScanStatus('warning')
           setMessage(`❌ ${data.name || '该乘客'} 已经登机`)
@@ -237,28 +237,23 @@ function App() {
           return
         }
 
-        // 拉最新资料
         const { data: guestRecord } = await supabase
           .from('guests')
           .select('*')
           .eq('id', baseGuest.id)
           .single()
+
         const mergedGuest = {
           ...baseGuest,
           name: guestRecord.name,
           seat: normalizeSeat(guestRecord.group_num),
-          class: guestRecord.type === 'graduate'
-            ? 'business'
-            : 'economy'
+          class: guestRecord.type === 'graduate' ? 'business' : 'economy',
         }
+
         setScannedGuest(mergedGuest)
-
         setMessage(`🎉 欢迎登机，${mergedGuest.name}`)
-
         setScanStatus('success')
-
         playSuccessSound()
-
         setShowWelcomeBurst(true)
         setScanPulse(true)
 
@@ -269,19 +264,15 @@ function App() {
         window.setTimeout(() => {
           setShowWelcomeBurst(false)
         }, 2200)
-
       } catch (error) {
         console.error(error)
-
         setScanStatus('warning')
         setMessage('❌ QR 解析失败')
         setScannedGuest(null)
-
       } finally {
         setIsProcessing(false)
         processingRef.current = false
 
-        // 3 秒后允许再次扫描
         setTimeout(() => {
           lastScannedRef.current = ''
         }, 3000)
@@ -430,10 +421,21 @@ function App() {
               }}
             >
               <div>
-                <p style={{ margin: 0, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1.1px', color: colors.primary, fontWeight: 800 }}>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: '12px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '1.1px',
+                    color: colors.primary,
+                    fontWeight: 800,
+                  }}
+                >
                   扫码区
                 </p>
-                <h2 style={{ margin: '6px 0 0', fontSize: '22px', color: colors.textMain }}>扫码登机</h2>
+                <h2 style={{ margin: '6px 0 0', fontSize: '22px', color: colors.textMain }}>
+                  扫码登机
+                </h2>
               </div>
               <span
                 style={{
@@ -486,10 +488,21 @@ function App() {
               boxShadow: '0 18px 40px rgba(15, 23, 42, 0.08)',
             }}
           >
-            <p style={{ margin: 0, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1.1px', color: colors.primary, fontWeight: 800 }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: '12px',
+                textTransform: 'uppercase',
+                letterSpacing: '1.1px',
+                color: colors.primary,
+                fontWeight: 800,
+              }}
+            >
               欢迎大厅
             </p>
-            <h2 style={{ margin: '8px 0 10px', fontSize: '22px', color: colors.textMain }}>欢迎登机展示</h2>
+            <h2 style={{ margin: '8px 0 10px', fontSize: '22px', color: colors.textMain }}>
+              欢迎登机展示
+            </h2>
             <p style={{ margin: '0 0 18px', color: colors.textMuted, lineHeight: 1.7 }}>
               扫描成功后，这里会切换成大屏式欢迎卡片，并展示当前者的完整凭证。
             </p>
@@ -518,75 +531,145 @@ function App() {
                     background: 'rgba(255,255,255,0.14)',
                   }}
                 />
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '-42px',
-                    left: '-28px',
-                    width: '130px',
-                    height: '130px',
-                    borderRadius: '999px',
-                    background: 'rgba(191, 219, 254, 0.16)',
-                  }}
-                />
+
                 <div style={{ position: 'relative', zIndex: 1 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', gap: '12px' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      gap: '16px',
+                      marginBottom: '18px',
+                    }}
+                  >
                     <div>
-                      <p style={{ margin: 0, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.88, fontWeight: 800 }}>
-                        欢迎登机
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize: '12px',
+                          letterSpacing: '1.2px',
+                          textTransform: 'uppercase',
+                          opacity: 0.8,
+                        }}
+                      >
+                        登机成功
                       </p>
-                      <h3 style={{ margin: '10px 0 0', fontSize: '32px', fontWeight: 900, lineHeight: 1.05 }}>{scannedGuest.name}</h3>
+                      <h3
+                        style={{
+                          margin: '8px 0 0',
+                          fontSize: 'clamp(1.6rem, 2vw, 2rem)',
+                          fontWeight: 900,
+                        }}
+                      >
+                        {scannedGuest.name}
+                      </h3>
                     </div>
-                    <span
+                    <div
                       style={{
-                        padding: '8px 12px',
+                        padding: '10px 14px',
                         borderRadius: '999px',
-                        backgroundColor: 'rgba(255,255,255,0.18)',
-                        color: '#ffffff',
+                        background: 'rgba(255,255,255,0.14)',
+                        fontSize: '12px',
                         fontWeight: 800,
-                        fontSize: '13px',
+                        letterSpacing: '0.8px',
                       }}
                     >
                       {scannedGuest.class.toUpperCase()}
-                    </span>
+                    </div>
                   </div>
-                  <p style={{ margin: '14px 0 0', lineHeight: 1.8, opacity: 0.95 }}>
-                    已成功完成登机验证，当前航班 {scannedGuest.flight}，座位 {scannedGuest.seat}，目的地 {scannedGuest.destination}。
-                  </p>
+
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                      gap: '12px',
+                      marginTop: '18px',
+                    }}
+                  >
+                    {credentialItems.map(([label, value]) => (
+                      <div
+                        key={label}
+                        style={{
+                          padding: '14px 16px',
+                          borderRadius: '18px',
+                          background: 'rgba(15, 23, 42, 0.28)',
+                          border: '1px solid rgba(255,255,255,0.14)',
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: '12px',
+                            textTransform: 'uppercase',
+                            letterSpacing: '1px',
+                            opacity: 0.8,
+                          }}
+                        >
+                          {label}
+                        </div>
+                        <div style={{ marginTop: '8px', fontSize: '18px', fontWeight: 800 }}>
+                          {value}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             ) : (
               <div
                 style={{
-                  background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
+                  padding: '24px',
                   borderRadius: '24px',
+                  background: 'linear-gradient(180deg, rgba(239, 246, 255, 0.95), rgba(255,255,255,0.98))',
                   border: `1px dashed ${colors.border}`,
-                  padding: '26px',
                   color: colors.textMuted,
                   lineHeight: 1.8,
                 }}
               >
-                等待扫码后，系统会把欢迎登机信息以大屏样式展示出来。
+                <p style={{ margin: 0, fontWeight: 700, color: colors.textMain }}>等待扫码</p>
+                <p style={{ margin: '8px 0 0' }}>扫描后这里会自动展开欢迎大卡，并显示完整登机凭证。</p>
               </div>
             )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginTop: '16px' }}>
-              {credentialItems.map(([label, value]) => (
-                <div
-                  key={label}
-                  style={{
-                    backgroundColor: '#f8fafc',
-                    borderRadius: '16px',
-                    border: `1px solid ${colors.border}`,
-                    padding: '13px 14px',
+            <div
+              style={{
+                marginTop: '20px',
+                padding: '18px 20px',
+                borderRadius: '20px',
+                backgroundColor: '#f8fafc',
+                border: `1px solid ${colors.border}`,
+              }}
+            >
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: '12px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.1px',
+                  color: colors.primary,
+                  fontWeight: 800,
+                }}
+              >
+                扫描人的名字
+              </p>
+              <div style={{ marginTop: '12px' }}>
+                <input
+                  value={scannerName}
+                  onChange={(e) => {
+                    const nextValue = e.target.value
+                    setScannerName(nextValue)
+                    localStorage.setItem('scanner_name', nextValue)
                   }}
-                >
-                  <p style={{ margin: 0, fontSize: '11px', textTransform: 'uppercase', color: colors.textMuted, fontWeight: 800, letterSpacing: '0.5px' }}>
-                    {label}
-                  </p>
-                  <p style={{ margin: '6px 0 0', fontWeight: 800, color: colors.textMain, fontSize: '15px' }}>{value}</p>
-                </div>
-              ))}
+                  placeholder="请输入委员名字"
+                  style={{
+                    width: '100%',
+                    padding: '12px 14px',
+                    borderRadius: '14px',
+                    border: `1px solid ${colors.border}`,
+                    fontSize: '15px',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
             </div>
           </section>
         </div>
