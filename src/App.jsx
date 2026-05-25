@@ -218,30 +218,40 @@ function App() {
           return
         }
 
-        const { data, error } = await supabase.rpc('board_guest', {
-          p_id: baseGuest.id,
-          p_scanned_by: scannerName || 'Unknown Scanner',
-        })
+        const { data: guestRecord, error: fetchError } = await supabase
+          .from('guests')
+          .select('id,name,group_num,type,boarded')
+          .eq('id', baseGuest.id)
+          .single()
 
-        if (error) {
-          console.error(error)
+        if (fetchError || !guestRecord) {
+          console.error(fetchError)
           setScanStatus('warning')
-          setMessage('❌ 数据库错误')
-          return
-        }
-
-        if (!data.success) {
-          setScanStatus('warning')
-          setMessage(`❌ ${data.name || '该乘客'} 已经登机`)
+          setMessage('❌ 未找到该乘客，请检查票据是否正确。')
           setScannedGuest(null)
           return
         }
 
-        const { data: guestRecord } = await supabase
+        if (guestRecord.boarded) {
+          setScanStatus('warning')
+          setMessage(`❌ ${guestRecord.name || '该乘客'} 已经登机`)
+          setScannedGuest(null)
+          return
+        }
+
+        const { error: updateError } = await supabase
           .from('guests')
-          .select('*')
+          .update({ boarded: true })
           .eq('id', baseGuest.id)
-          .single()
+          .eq('boarded', false)
+
+        if (updateError) {
+          console.error(updateError)
+          setScanStatus('warning')
+          setMessage('❌ 数据库错误')
+          setScannedGuest(null)
+          return
+        }
 
         const mergedGuest = {
           ...baseGuest,
