@@ -119,31 +119,8 @@ function App() {
 
         setScannedGuest(mergedGuest)
 
-        if (mode === 'onboarding') {
-          setScanStatus('success')
-          setMessage(`✅ Welcome onboard, ${mergedGuest.name}!`)
-          return
-        }
-
-        if (mergedGuest.food_redeemed) {
-          setScanStatus('warning')
-          setMessage(`⚠️ ${mergedGuest.name} has already redeemed the food.`)
-          return
-        }
-
-        const { error: updateError } = await supabase
-          .from('guests')
-          .update({ food_redeemed: true })
-          .eq('id', mergedGuest.id)
-
-        if (updateError) {
-          setScanStatus('warning')
-          setMessage('❌ Update failed. Please retry the food redemption.')
-          return
-        }
-
         setScanStatus('success')
-        setMessage(`✅ ${mergedGuest.name} redeemed successfully.`)
+        setMessage(`Welcome onboard, ${mergedGuest.name}!`)
       } catch (error) {
         setScanStatus('warning')
         setMessage('❌ QR parse error. Please scan a valid boarding pass.')
@@ -164,11 +141,7 @@ function App() {
     setMode(nextMode)
     setScannedGuest(null)
     lastScannedRef.current = ''
-    setMessage(
-      nextMode === 'onboarding'
-        ? 'Scan the participant QR code to welcome them onboard.'
-        : 'Scan the participant QR code to redeem the food.'
-    )
+    setMessage('Scan the participant QR code to welcome them onboard.')
     setScanStatus('success')
   }
 
@@ -243,19 +216,13 @@ function App() {
               key: 'onboarding',
               title: 'Onboarding Scan',
               description: 'Welcome participants and verify credentials.',
-              badge: '✅ Entry',
-            },
-            {
-              key: 'food',
-              title: 'Food Redemption',
-              description: 'Mark food rewards as claimed.',
-              badge: '🍽️ Food',
+              badge: 'Entry',
             },
             {
               key: 'generate',
               title: 'Ticket Generator',
               description: 'Generate boarding passes for participants.',
-              badge: '🎫 Tickets',
+              badge: 'Tickets',
               isLink: true,
               to: '/generate',
             },
