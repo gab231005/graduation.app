@@ -115,7 +115,7 @@ function TicketGenerator() {
           <p style={{ margin: 0, color: colors.primary, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1.1px', fontSize: '12px' }}>
             2026 下半年欢送会
           </p>
-          <h1 style={{ margin: '10px 0 8px', fontSize: 'clamp(2rem, 3vw, 2.5rem)', color: colors.textTitle }}>机票生成器</h1>
+          <h1 style={{ margin: '10px 0 8px', fontSize: 'clamp(2rem, 3vw, 2.5rem)', color: 'white' }}>机票生成器</h1>
           <p style={{ margin: '0 auto', maxWidth: '720px', color: colors.textMuted, lineHeight: 1.7 }}>
             输入参与者姓名，系统会直接从 Supabase 查询并生成对应的登机牌。
           </p>
