@@ -96,16 +96,16 @@ function TicketGenerator() {
 
   const colors = {
     primary: '#2563eb',
-    textMain: '#11264a',
-    textTitle: '#dae4fb',
+    textMain: '#111827', // 黑色
+    textTitle: '#0b1a33', // 蓝色标题
     textMuted: '#64748b',
     border: '#dbe4f0',
-    premiumBg: '#0f172a',
-    premiumAccent: '#facc15',
-    standardBg: '#ffffff',
-    participantBg: '#0b1a33',
-    participantAccent: '#d4af37',
-    participantText: '#ffffff',
+    gold: '#d4af37',
+    white: '#fff',
+    blue: '#0b1a33',
+    gradBlack: '#181c23',
+    gradGold: '#d4af37',
+    gradDark: '#111827',
   }
 
   return (
@@ -135,7 +135,7 @@ function TicketGenerator() {
             marginBottom: '24px',
             padding: '18px',
             borderRadius: '20px',
-            backgroundColor: colors.standardBg,
+            backgroundColor: colors.white,
             border: `1px solid ${colors.border}`,
             boxShadow: '0 12px 30px rgba(15, 23, 42, 0.06)',
           }}
@@ -154,7 +154,7 @@ function TicketGenerator() {
               outline: 'none',
               fontSize: '16px',
               padding: '10px 4px',
-              color: colors.textMain,
+              color: '#111827', // 始终黑色
               backgroundColor: 'transparent',
             }}
           />
@@ -192,6 +192,19 @@ function TicketGenerator() {
               class: isGraduate ? 'business' : 'economy',
             }
 
+            // 样式变量
+            const ticketBg = isGraduate ? colors.gradBlack : colors.white
+            const ticketBorder = isGraduate ? `2px solid ${colors.gradGold}` : `2px solid ${colors.blue}`
+            const leftBg = isGraduate ? colors.gradBlack : colors.white
+            const leftColor = isGraduate ? colors.gradGold : colors.blue
+            const rightBg = isGraduate ? colors.gradDark : colors.blue
+            const rightColor = isGraduate ? colors.gradGold : colors.gold
+            const titleColor = isGraduate ? colors.gradGold : colors.gold
+            const nameColor = isGraduate ? colors.white : '#111827'
+            const infoLabelColor = isGraduate ? colors.gradGold : colors.blue
+            const infoValueColor = isGraduate ? colors.white : '#111827'
+            const ceremonyColor = isGraduate ? colors.gradGold : colors.gold
+
             return (
               <div
                 key={person.id}
@@ -209,20 +222,21 @@ function TicketGenerator() {
                   style={{
                     width: '100%',
                     minHeight: '240px',
-                    borderRadius: '10px',
+                    borderRadius: '18px',
                     display: 'flex',
                     overflow: 'hidden',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                    backgroundColor: isGraduate ? colors.premiumBg : colors.participantBg,
-                    color: isGraduate ? '#ffffff' : colors.participantText,
-                    border: `1px solid ${isGraduate ? '#1e293b' : 'transparent'}`,
+                    boxShadow: '0 4px 24px rgba(0,0,0,0.18)',
+                    background: ticketBg,
+                    border: ticketBorder,
                   }}
                 >
+                  {/* 左侧 */}
                   <div
                     style={{
                       flex: 2,
-                      padding: '20px',
-                      borderRight: isGraduate ? '2px dashed #d4af37' : '2px dashed #d4af37',
+                      padding: '28px 28px 28px 32px',
+                      background: leftBg,
+                      borderRight: `2px dashed ${colors.gold}`,
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
@@ -231,51 +245,57 @@ function TicketGenerator() {
                     <div>
                       <div
                         style={{
-                          color: isGraduate ? colors.premiumAccent : colors.participantAccent,
+                          color: titleColor,
                           fontWeight: 800,
                           letterSpacing: '1px',
-                          fontSize: '12px',
+                          fontSize: '15px',
                           textTransform: 'uppercase',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
                         }}
                       >
-                        🎓 GRADUATION BOARDING PASS
+                        <span role="img" aria-label="grad">🎓</span> GRADUATION BOARDING PASS
                       </div>
                       <div
                         style={{
-                          fontSize: '1.5em',
+                          fontSize: '2em',
                           fontWeight: 900,
-                          margin: '10px 0',
+                          margin: '18px 0 10px',
+                          color: nameColor,
+                          letterSpacing: '1px',
                         }}
                       >
                         {person.name}
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', marginTop: '10px', textAlign: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '24px', marginTop: '10px', textAlign: 'center' }}>
                       {[
                         ['FLIGHT', FLIGHT_NO],
                         ['SEAT', seat],
                         ['TIME', TIME],
                       ].map(([label, value]) => (
                         <div key={label} style={{ flex: 1 }}>
-                          <div style={{ fontWeight: 800, fontSize: '12px', textTransform: 'uppercase', marginBottom: '4px' }}>{label}</div>
-                          <div style={{ fontWeight: 900, fontSize: '18px' }}>{value}</div>
+                          <div style={{ fontWeight: 800, fontSize: '13px', textTransform: 'uppercase', marginBottom: '4px', color: infoLabelColor }}>{label}</div>
+                          <div style={{ fontWeight: 900, fontSize: '22px', color: infoValueColor }}>{value}</div>
                         </div>
                       ))}
                     </div>
 
-                    <div style={{ marginTop: '20px', fontWeight: 800 }}>
-                      <div>ROUTE: {ROUTE}</div>
-                      <div style={{ marginTop: '2px' }}>Graduation Ceremony</div>
+                    <div style={{ marginTop: '24px', fontWeight: 800, color: leftColor, fontSize: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: leftColor }}>ROUTE: BKI TO FUTURE</span>
+                      <span style={{ color: ceremonyColor, fontWeight: 700, fontSize: '15px', marginLeft: '18px' }}>Graduation Ceremony</span>
                     </div>
                   </div>
 
+                  {/* 右侧 */}
                   <div
                     style={{
                       flex: 1,
-                      padding: '20px',
-                      backgroundColor: isGraduate ? '#111827' : colors.participantBg,
-                      color: isGraduate ? '#ffffff' : colors.participantAccent,
+                      padding: '28px 24px',
+                      background: rightBg,
+                      color: rightColor,
                       textAlign: 'center',
                       display: 'flex',
                       flexDirection: 'column',
@@ -285,14 +305,16 @@ function TicketGenerator() {
                   >
                     <div
                       style={{
-                        backgroundColor: '#ffffff',
+                        backgroundColor: colors.white,
                         padding: '10px',
-                        borderRadius: '8px',
+                        borderRadius: '10px',
+                        marginBottom: '18px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                       }}
                     >
                       <QRCodeCanvas value={JSON.stringify(qrData)} size={120} level="H" />
                     </div>
-                    <div style={{ marginTop: '12px', fontWeight: 800 }}>SCAN TO BOARD</div>
+                    <div style={{ fontWeight: 900, fontSize: '16px', color: rightColor, letterSpacing: '1px' }}>SCAN TO BOARD</div>
                   </div>
                 </div>
 
