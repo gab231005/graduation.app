@@ -35,35 +35,66 @@ const normalizeGuest = (payload) => {
     time: payload.time ?? TIME,
     destination: payload.destination ?? ROUTE,
     class: guestClass === 'graduate' || guestClass === 'business' || guestClass === 'vip' ? 'business' : 'economy',
-    food_redeemed: payload.food_redeemed ?? false,
   }
 }
 
 function App() {
-  const [mode, setMode] = useState('onboarding')
-  const [message, setMessage] = useState('Scan the participant QR code to begin.')
+  const [message, setMessage] = useState('请扫描票据二维码开始登机。')
   const [scanStatus, setScanStatus] = useState('success')
   const [isProcessing, setIsProcessing] = useState(false)
   const [scannedGuest, setScannedGuest] = useState(null)
   const [configWarning, setConfigWarning] = useState('')
+  const [showWelcomeBurst, setShowWelcomeBurst] = useState(false)
+  const [scanPulse, setScanPulse] = useState(false)
 
   const processingRef = useRef(false)
   const lastScannedRef = useRef('')
+  const audioContextRef = useRef(null)
+
+  const playSuccessSound = () => {
+    const AudioContext = window.AudioContext || window.webkitAudioContext
+
+    if (!AudioContext) {
+      return
+    }
+
+    if (!audioContextRef.current) {
+      audioContextRef.current = new AudioContext()
+    }
+
+    const context = audioContextRef.current
+
+    if (context.state === 'suspended') {
+      context.resume().catch(() => {})
+    }
+
+    const oscillator = context.createOscillator()
+    const gainNode = context.createGain()
+
+    oscillator.type = 'triangle'
+    oscillator.frequency.setValueAtTime(660, context.currentTime)
+    oscillator.frequency.exponentialRampToValueAtTime(880, context.currentTime + 0.12)
+
+    gainNode.gain.setValueAtTime(0.001, context.currentTime)
+    gainNode.gain.exponentialRampToValueAtTime(0.18, context.currentTime + 0.02)
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.32)
+
+    oscillator.connect(gainNode)
+    gainNode.connect(context.destination)
+    oscillator.start()
+    oscillator.stop(context.currentTime + 0.34)
+  }
 
   useEffect(() => {
     if (!supabase) {
-      setConfigWarning('Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in Vercel to activate cloud syncing.')
+      setConfigWarning('当前未配置 Supabase，二维码解析仍可展示本地票据信息。请在 Vercel 或本地环境填入 VITE_SUPABASE_URL 和 VITE_SUPABASE_ANON_KEY。')
     }
   }, [])
 
   useEffect(() => {
-    if (!supabase) {
-      return
-    }
-
     const scanner = new Html5QrcodeScanner(
       'reader',
-      { fps: 10, qrbox: { width: 280, height: 280 }, rememberLastUsedCamera: true },
+      { fps: 10, qrbox: { width: 320, height: 320 }, rememberLastUsedCamera: true },
       false
     )
 
@@ -81,72 +112,55 @@ function App() {
       lastScannedRef.current = trimmed
       processingRef.current = true
       setIsProcessing(true)
-      setMessage('Checking the participant record...')
+      setMessage('正在核对登机凭证...')
       setScanStatus('success')
 
       try {
         const parsed = JSON.parse(trimmed)
         const baseGuest = normalizeGuest(parsed)
 
-        if (!baseGuest?.id) {
+        if (!baseGuest?.id || !baseGuest.name) {
           setScanStatus('warning')
-          setMessage('❌ Invalid QR code. Please scan a valid participant pass.')
+          setMessage('❌ 票据二维码无效，请扫描正确的登机牌。')
           setScannedGuest(null)
+          setScanPulse(false)
+          setShowWelcomeBurst(false)
           return
         }
 
-        const { data: guestRecord, error: fetchError } = await supabase
-          .from('guests')
-          .select('id,name,group_num,type,food_redeemed')
-          .eq('id', baseGuest.id)
-          .single()
+        let mergedGuest = { ...baseGuest }
 
-        if (fetchError || !guestRecord) {
-          setScanStatus('warning')
-          setMessage('❌ Passenger record not found in Supabase.')
-          setScannedGuest(null)
-          return
-        }
+        if (supabase) {
+          const { data: guestRecord, error: fetchError } = await supabase
+            .from('guests')
+            .select('id,name,group_num,type')
+            .eq('id', baseGuest.id)
+            .single()
 
-        const mergedGuest = {
-          ...baseGuest,
-          name: guestRecord.name ?? baseGuest.name,
-          seat: normalizeSeat(guestRecord.group_num ?? baseGuest.seat),
-          class: guestRecord.type === 'graduate' ? 'business' : baseGuest.class,
-          food_redeemed: guestRecord.food_redeemed ?? false,
+          if (!fetchError && guestRecord) {
+            mergedGuest = {
+              ...mergedGuest,
+              name: guestRecord.name ?? baseGuest.name,
+              seat: normalizeSeat(guestRecord.group_num ?? baseGuest.seat),
+              class: guestRecord.type === 'graduate' ? 'business' : baseGuest.class,
+            }
+          }
         }
 
         setScannedGuest(mergedGuest)
-
-        if (mode === 'onboarding') {
-          setScanStatus('success')
-          setMessage(`✅ Welcome onboard, ${mergedGuest.name}!`)
-          return
-        }
-
-        if (mergedGuest.food_redeemed) {
-          setScanStatus('warning')
-          setMessage(`⚠️ ${mergedGuest.name} has already redeemed the food.`)
-          return
-        }
-
-        const { error: updateError } = await supabase
-          .from('guests')
-          .update({ food_redeemed: true })
-          .eq('id', mergedGuest.id)
-
-        if (updateError) {
-          setScanStatus('warning')
-          setMessage('❌ Update failed. Please retry the food redemption.')
-          return
-        }
-
+        setMessage(`🎉 欢迎登机，${mergedGuest.name}！`)
         setScanStatus('success')
-        setMessage(`✅ ${mergedGuest.name} redeemed successfully.`)
+        playSuccessSound()
+        setShowWelcomeBurst(true)
+        setScanPulse(true)
+        window.setTimeout(() => setScanPulse(false), 900)
+        window.setTimeout(() => setShowWelcomeBurst(false), 2200)
       } catch (error) {
         setScanStatus('warning')
-        setMessage('❌ QR parse error. Please scan a valid boarding pass.')
+        setMessage('❌ 二维码解析失败，请扫描合法的登机牌。')
         setScannedGuest(null)
+        setScanPulse(false)
+        setShowWelcomeBurst(false)
       } finally {
         setIsProcessing(false)
         processingRef.current = false
@@ -157,155 +171,133 @@ function App() {
       processingRef.current = false
       scanner.clear().catch(() => {})
     }
-  }, [mode])
+  }, [])
 
-  const handleModeChange = (nextMode) => {
-    setMode(nextMode)
-    setScannedGuest(null)
-    lastScannedRef.current = ''
-    setMessage(
-      nextMode === 'onboarding'
-        ? 'Scan the participant QR code to welcome them onboard.'
-        : 'Scan the participant QR code to redeem the food.'
-    )
-    setScanStatus('success')
-  }
-
-  // UI STYLING CONSTANTS (White & Blue Theme)
   const colors = {
-    bg: '#f0f4f8',
-    cardBg: '#ffffff',
+    bg: '#f4f7fb',
+    panel: '#ffffff',
     primary: '#2563eb',
-    primaryLight: '#eff6ff',
-    textMain: '#1e293b',
-    textMuted: '#64748b',
-    border: '#e2e8f0',
-    successBg: '#dcfce7',
-    successText: '#166534',
-    warningBg: '#fee2e2',
-    warningText: '#991b1b',
+    textMain: '#0f172a',
+    textMuted: '#52607a',
+    border: '#d9e3f1',
+    successBg: '#ecfdf5',
+    successText: '#047857',
+    warningBg: '#fef2f2',
+    warningText: '#b91c1c',
+    glow: 'rgba(37, 99, 235, 0.24)',
   }
+
+  const credentialItems = scannedGuest
+    ? [
+        ['姓名', scannedGuest.name],
+        ['座位', scannedGuest.seat],
+        ['航班', scannedGuest.flight],
+        ['时间', scannedGuest.time],
+        ['目的地', scannedGuest.destination],
+        ['舱位', scannedGuest.class.toUpperCase()],
+      ]
+    : []
 
   return (
     <div
       style={{
         minHeight: '100vh',
-        padding: '32px 24px',
-        backgroundColor: colors.bg,
+        padding: '28px 20px 40px',
+        background:
+          'radial-gradient(circle at top left, rgba(191, 219, 254, 0.88), transparent 30%), radial-gradient(circle at top right, rgba(224, 231, 255, 0.78), transparent 28%), linear-gradient(180deg, #f9fcff 0%, #f4f8fd 52%, #ffffff 100%)',
         color: colors.textMain,
         fontFamily: 'system-ui, -apple-system, sans-serif',
       }}
     >
-      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        
-        {/* HEADER */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <p style={{ margin: '0 0 8px', color: colors.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.2px', fontSize: '14px' }}>
-            Graduation Ceremony Operations
-          </p>
-          <h1 style={{ margin: '0 0 12px', fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', color: '#0f172a', fontWeight: 800 }}>
-            Boarding Pass & Dashboard
+      <style>{`
+        @keyframes floatUp {
+          0% { transform: translateY(16px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulseGlow {
+          0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.28); }
+          70% { box-shadow: 0 0 0 18px rgba(37, 99, 235, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+      `}</style>
+
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ marginBottom: '28px', textAlign: 'center' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '6px 12px',
+              borderRadius: '999px',
+              backgroundColor: 'rgba(37, 99, 235, 0.1)',
+              color: colors.primary,
+              fontSize: '12px',
+              fontWeight: 800,
+              letterSpacing: '1.1px',
+              textTransform: 'uppercase',
+            }}
+          >
+            ✨ 2026 下半年欢送会
+          </div>
+          <h1
+            style={{
+              margin: '14px 0 10px',
+              fontSize: 'clamp(2.1rem, 3.6vw, 3rem)',
+              lineHeight: 1.05,
+              fontWeight: 900,
+              color: '#0f172a',
+            }}
+          >
+            欢迎大厅
           </h1>
-          <p style={{ margin: '0 auto', maxWidth: '600px', color: colors.textMuted, lineHeight: 1.6 }}>
-            Validate onboarding and food redemption via QR code, or allow participants to generate their boarding passes.
+          <p
+            style={{
+              margin: '0 auto',
+              maxWidth: '720px',
+              color: colors.textMuted,
+              fontSize: '16px',
+              lineHeight: 1.7,
+            }}
+          >
+            扫描登机牌二维码，即刻进入欢迎大厅，展示“欢迎登机”与完整凭证。
           </p>
         </div>
 
-        {/* WARNING */}
         {configWarning && (
           <div
             style={{
               marginBottom: '24px',
-              padding: '16px',
-              borderRadius: '12px',
-              backgroundColor: '#fef9c3',
+              padding: '16px 18px',
+              borderRadius: '16px',
+              background: 'linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%)',
               color: '#854d0e',
-              border: '1px solid #fef08a',
+              border: '1px solid #fde68a',
               textAlign: 'center',
+              fontSize: '15px',
+              fontWeight: 800,
             }}
           >
             {configWarning}
           </div>
         )}
 
-        {/* MODE TOGGLES */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '16px',
-            marginBottom: '32px',
+            gridTemplateColumns: '1.05fr 0.95fr',
+            gap: '24px',
+            alignItems: 'start',
           }}
         >
-          {[
-            {
-              key: 'onboarding',
-              title: 'Onboarding Scan',
-              description: 'Welcome participants and verify credentials.',
-              badge: '✅ Entry',
-            },
-            {
-              key: 'food',
-              title: 'Food Redemption',
-              description: 'Mark food rewards as claimed.',
-              badge: '🍽️ Food',
-            },
-          ].map((panel) => {
-            const isActive = mode === panel.key;
-            return (
-              <button
-                key={panel.key}
-                type="button"
-                onClick={() => handleModeChange(panel.key)}
-                disabled={isProcessing}
-                style={{
-                  textAlign: 'left',
-                  padding: '20px',
-                  borderRadius: '16px',
-                  border: `2px solid ${isActive ? colors.primary : colors.border}`,
-                  backgroundColor: isActive ? colors.primaryLight : colors.cardBg,
-                  color: colors.textMain,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  boxShadow: isActive ? '0 4px 12px rgba(37, 99, 235, 0.1)' : 'none',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <p style={{ margin: 0, fontWeight: 700, color: isActive ? colors.primary : colors.textMain, fontSize: '18px' }}>
-                    {panel.title}
-                  </p>
-                  <span
-                    style={{
-                      padding: '4px 10px',
-                      borderRadius: '999px',
-                      backgroundColor: isActive ? colors.primary : colors.bg,
-                      color: isActive ? '#ffffff' : colors.textMuted,
-                      fontSize: '12px',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {panel.badge}
-                  </span>
-                </div>
-                <p style={{ margin: 0, color: isActive ? '#1e3a8a' : colors.textMuted, fontSize: '14px' }}>
-                  {panel.description}
-                </p>
-              </button>
-            )
-          })}
-        </div>
-
-        {/* MAIN CONTENT AREA */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '32px' }}>
-          
-          {/* SCANNER SECTION */}
           <section
             style={{
-              backgroundColor: colors.cardBg,
-              borderRadius: '20px',
-              padding: '32px',
+              backgroundColor: colors.panel,
+              borderRadius: '28px',
+              padding: '28px',
               border: `1px solid ${colors.border}`,
-              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.02)',
+              boxShadow: '0 18px 40px rgba(15, 23, 42, 0.08)',
             }}
           >
             <div
@@ -313,83 +305,169 @@ function App() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: '24px',
-                borderBottom: `1px solid ${colors.border}`,
-                paddingBottom: '16px',
+                marginBottom: '18px',
               }}
             >
               <div>
-                <h2 style={{ margin: 0, fontSize: '20px', color: '#0f172a' }}>
-                  {mode === 'onboarding' ? 'Participant Check-in' : 'Food Redemption Check'}
-                </h2>
+                <p style={{ margin: 0, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1.1px', color: colors.primary, fontWeight: 800 }}>
+                  扫码区
+                </p>
+                <h2 style={{ margin: '6px 0 0', fontSize: '22px', color: colors.textMain }}>扫码登机</h2>
               </div>
               <span
                 style={{
-                  padding: '6px 14px',
+                  padding: '8px 14px',
                   borderRadius: '999px',
-                  backgroundColor: isProcessing ? '#e0f2fe' : colors.successBg,
-                  color: isProcessing ? '#0369a1' : colors.successText,
-                  fontWeight: 600,
+                  backgroundColor: isProcessing ? '#dbeafe' : colors.successBg,
+                  color: isProcessing ? '#1d4ed8' : colors.successText,
+                  fontWeight: 800,
                   fontSize: '13px',
                 }}
               >
-                {isProcessing ? 'Processing...' : 'Camera Active'}
+                {isProcessing ? '识别中...' : '相机已开启'}
               </span>
             </div>
 
-            <div id="reader" style={{ borderRadius: '12px', overflow: 'hidden', border: `1px solid ${colors.border}` }} />
+            <div
+              style={{
+                padding: '10px',
+                borderRadius: '24px',
+                background: 'linear-gradient(135deg, rgba(37,99,235,0.08), rgba(59,130,246,0.04))',
+                border: `1px solid ${colors.border}`,
+                animation: scanPulse ? 'pulseGlow 0.9s ease-out' : 'none',
+              }}
+            >
+              <div id="reader" style={{ borderRadius: '18px', overflow: 'hidden' }} />
+            </div>
 
             <div
               style={{
-                marginTop: '24px',
-                padding: '16px 20px',
-                borderRadius: '12px',
+                marginTop: '18px',
+                padding: '16px 18px',
+                borderRadius: '18px',
                 backgroundColor: scanStatus === 'success' ? colors.successBg : colors.warningBg,
                 color: scanStatus === 'success' ? colors.successText : colors.warningText,
-                border: `1px solid ${scanStatus === 'success' ? '#bbf7d0' : '#fecaca'}`,
+                border: `1px solid ${scanStatus === 'success' ? '#a7f3d0' : '#fecaca'}`,
                 textAlign: 'center',
+                boxShadow: scanStatus === 'success' ? `0 12px 30px ${colors.glow}` : 'none',
               }}
             >
-              <p style={{ margin: 0, fontWeight: 600, fontSize: '15px' }}>{message}</p>
+              <p style={{ margin: 0, fontWeight: 800, fontSize: '15px' }}>{message}</p>
             </div>
-
-            {/* SCANNED GUEST RESULTS */}
-            {scannedGuest && (
-              <div
-                style={{
-                  marginTop: '24px',
-                  backgroundColor: '#f8fafc',
-                  border: `1px solid ${colors.border}`,
-                  borderRadius: '16px',
-                  padding: '24px',
-                }}
-              >
-                <p style={{ margin: '0 0 16px', color: colors.textMain, fontWeight: 700, fontSize: '16px' }}>
-                  Verified Credentials
-                </p>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
-                  {[
-                    ['Name', scannedGuest.name],
-                    ['Seat', scannedGuest.seat],
-                    ['Flight', scannedGuest.flight],
-                    ['Time', scannedGuest.time],
-                    ['Class', scannedGuest.class.toUpperCase()],
-                  ].map(([label, value]) => (
-                    <div key={label} style={{ backgroundColor: '#ffffff', padding: '12px 16px', borderRadius: '10px', border: `1px solid ${colors.border}` }}>
-                      <p style={{ margin: 0, fontSize: '11px', color: colors.textMuted, textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.5px' }}>
-                        {label}
-                      </p>
-                      <p style={{ margin: '4px 0 0', fontWeight: 700, color: colors.textMain, fontSize: '15px' }}>
-                        {value}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </section>
 
-          
+          <section
+            style={{
+              backgroundColor: colors.panel,
+              borderRadius: '28px',
+              padding: '28px',
+              border: `1px solid ${colors.border}`,
+              boxShadow: '0 18px 40px rgba(15, 23, 42, 0.08)',
+            }}
+          >
+            <p style={{ margin: 0, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1.1px', color: colors.primary, fontWeight: 800 }}>
+              欢迎大厅
+            </p>
+            <h2 style={{ margin: '8px 0 10px', fontSize: '22px', color: colors.textMain }}>欢迎登机展示</h2>
+            <p style={{ margin: '0 0 18px', color: colors.textMuted, lineHeight: 1.7 }}>
+              扫描成功后，这里会切换成大屏式欢迎卡片，并展示当前者的完整凭证。
+            </p>
+
+            {scannedGuest ? (
+              <div
+                style={{
+                  position: 'relative',
+                  padding: '24px 24px 22px',
+                  borderRadius: '24px',
+                  background: 'linear-gradient(135deg, #0f172a 0%, #1d4ed8 55%, #38bdf8 100%)',
+                  color: '#ffffff',
+                  boxShadow: '0 24px 48px rgba(37, 99, 235, 0.24)',
+                  overflow: 'hidden',
+                  animation: showWelcomeBurst ? 'floatUp 0.45s ease-out' : 'none',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '-34px',
+                    right: '-34px',
+                    width: '150px',
+                    height: '150px',
+                    borderRadius: '999px',
+                    background: 'rgba(255,255,255,0.14)',
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '-42px',
+                    left: '-28px',
+                    width: '130px',
+                    height: '130px',
+                    borderRadius: '999px',
+                    background: 'rgba(191, 219, 254, 0.16)',
+                  }}
+                />
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', gap: '12px' }}>
+                    <div>
+                      <p style={{ margin: 0, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.88, fontWeight: 800 }}>
+                        欢迎登机
+                      </p>
+                      <h3 style={{ margin: '10px 0 0', fontSize: '32px', fontWeight: 900, lineHeight: 1.05 }}>{scannedGuest.name}</h3>
+                    </div>
+                    <span
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '999px',
+                        backgroundColor: 'rgba(255,255,255,0.18)',
+                        color: '#ffffff',
+                        fontWeight: 800,
+                        fontSize: '13px',
+                      }}
+                    >
+                      {scannedGuest.class.toUpperCase()}
+                    </span>
+                  </div>
+                  <p style={{ margin: '14px 0 0', lineHeight: 1.8, opacity: 0.95 }}>
+                    已成功完成登机验证，当前航班 {scannedGuest.flight}，座位 {scannedGuest.seat}，目的地 {scannedGuest.destination}。
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div
+                style={{
+                  background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
+                  borderRadius: '24px',
+                  border: `1px dashed ${colors.border}`,
+                  padding: '26px',
+                  color: colors.textMuted,
+                  lineHeight: 1.8,
+                }}
+              >
+                等待扫码后，系统会把欢迎登机信息以大屏样式展示出来。
+              </div>
+            )}
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginTop: '16px' }}>
+              {credentialItems.map(([label, value]) => (
+                <div
+                  key={label}
+                  style={{
+                    backgroundColor: '#f8fafc',
+                    borderRadius: '16px',
+                    border: `1px solid ${colors.border}`,
+                    padding: '13px 14px',
+                  }}
+                >
+                  <p style={{ margin: 0, fontSize: '11px', textTransform: 'uppercase', color: colors.textMuted, fontWeight: 800, letterSpacing: '0.5px' }}>
+                    {label}
+                  </p>
+                  <p style={{ margin: '6px 0 0', fontWeight: 800, color: colors.textMain, fontSize: '15px' }}>{value}</p>
+                </div>
+              ))}
+            </div>
+          </section>
         </div>
       </div>
     </div>
