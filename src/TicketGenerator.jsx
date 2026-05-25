@@ -96,7 +96,7 @@ function TicketGenerator() {
 
   const colors = {
     primary: '#2563eb',
-    textMain: '#0f172a',
+    textMain: '#c5d6ff',
     textMuted: '#64748b',
     border: '#dbe4f0',
     premiumBg: '#0f172a',
