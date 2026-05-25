@@ -398,7 +398,7 @@ function App() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1.05fr 0.95fr',
+            gridTemplateColumns: '1fr',
             gap: '24px',
             alignItems: 'start',
           }}
