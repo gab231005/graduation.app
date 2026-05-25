@@ -1,5 +1,6 @@
 import { Html5QrcodeScanner } from 'html5-qrcode'
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from './lib/supabase'
 
 const FLIGHT = 'GD2026'
@@ -118,31 +119,8 @@ function App() {
 
         setScannedGuest(mergedGuest)
 
-        if (mode === 'onboarding') {
-          setScanStatus('success')
-          setMessage(`✅ Welcome onboard, ${mergedGuest.name}!`)
-          return
-        }
-
-        if (mergedGuest.food_redeemed) {
-          setScanStatus('warning')
-          setMessage(`⚠️ ${mergedGuest.name} has already redeemed the food.`)
-          return
-        }
-
-        const { error: updateError } = await supabase
-          .from('guests')
-          .update({ food_redeemed: true })
-          .eq('id', mergedGuest.id)
-
-        if (updateError) {
-          setScanStatus('warning')
-          setMessage('❌ Update failed. Please retry the food redemption.')
-          return
-        }
-
         setScanStatus('success')
-        setMessage(`✅ ${mergedGuest.name} redeemed successfully.`)
+        setMessage(`Welcome onboard, ${mergedGuest.name}!`)
       } catch (error) {
         setScanStatus('warning')
         setMessage('❌ QR parse error. Please scan a valid boarding pass.')
@@ -163,11 +141,7 @@ function App() {
     setMode(nextMode)
     setScannedGuest(null)
     lastScannedRef.current = ''
-    setMessage(
-      nextMode === 'onboarding'
-        ? 'Scan the participant QR code to welcome them onboard.'
-        : 'Scan the participant QR code to redeem the food.'
-    )
+    setMessage('Scan the participant QR code to welcome them onboard.')
     setScanStatus('success')
   }
 
@@ -242,34 +216,35 @@ function App() {
               key: 'onboarding',
               title: 'Onboarding Scan',
               description: 'Welcome participants and verify credentials.',
-              badge: '✅ Entry',
+              badge: 'Entry',
             },
             {
-              key: 'food',
-              title: 'Food Redemption',
-              description: 'Mark food rewards as claimed.',
-              badge: '🍽️ Food',
+              key: 'generate',
+              title: 'Ticket Generator',
+              description: 'Generate boarding passes for participants.',
+              badge: 'Tickets',
+              isLink: true,
+              to: '/generate',
             },
           ].map((panel) => {
             const isActive = mode === panel.key;
-            return (
-              <button
-                key={panel.key}
-                type="button"
-                onClick={() => handleModeChange(panel.key)}
-                disabled={isProcessing}
-                style={{
-                  textAlign: 'left',
-                  padding: '20px',
-                  borderRadius: '16px',
-                  border: `2px solid ${isActive ? colors.primary : colors.border}`,
-                  backgroundColor: isActive ? colors.primaryLight : colors.cardBg,
-                  color: colors.textMain,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  boxShadow: isActive ? '0 4px 12px rgba(37, 99, 235, 0.1)' : 'none',
-                }}
-              >
+            
+            const cardStyle = {
+              textAlign: 'left',
+              padding: '20px',
+              borderRadius: '16px',
+              border: `2px solid ${isActive ? colors.primary : colors.border}`,
+              backgroundColor: isActive ? colors.primaryLight : colors.cardBg,
+              color: colors.textMain,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: isActive ? '0 4px 12px rgba(37, 99, 235, 0.1)' : 'none',
+              textDecoration: 'none',
+              display: 'block',
+            };
+
+            const cardContent = (
+              <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                   <p style={{ margin: 0, fontWeight: 700, color: isActive ? colors.primary : colors.textMain, fontSize: '18px' }}>
                     {panel.title}
@@ -290,6 +265,30 @@ function App() {
                 <p style={{ margin: 0, color: isActive ? '#1e3a8a' : colors.textMuted, fontSize: '14px' }}>
                   {panel.description}
                 </p>
+              </>
+            );
+
+            if (panel.isLink) {
+              return (
+                <Link
+                  key={panel.key}
+                  to={panel.to}
+                  style={cardStyle}
+                >
+                  {cardContent}
+                </Link>
+              );
+            }
+
+            return (
+              <button
+                key={panel.key}
+                type="button"
+                onClick={() => handleModeChange(panel.key)}
+                disabled={isProcessing}
+                style={cardStyle}
+              >
+                {cardContent}
               </button>
             )
           })}
