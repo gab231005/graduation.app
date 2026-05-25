@@ -1,7 +1,6 @@
 import { Html5QrcodeScanner } from 'html5-qrcode'
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from './lib/supabase'
-import TicketGenerator from './TicketGenerator'
 
 const FLIGHT = 'GD2026'
 const ROUTE = 'BKI to FUTURE'
@@ -390,18 +389,7 @@ function App() {
             )}
           </section>
 
-          {/* TICKET GENERATOR SECTION */}
-          <section
-            style={{
-              backgroundColor: colors.cardBg,
-              borderRadius: '20px',
-              padding: '32px',
-              border: `1px solid ${colors.border}`,
-              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.02)',
-            }}
-          >
-            <TicketGenerator />
-          </section>
+          
         </div>
       </div>
     </div>
