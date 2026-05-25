@@ -153,7 +153,7 @@ function TicketGenerator() {
               outline: 'none',
               fontSize: '16px',
               padding: '10px 4px',
-              color: colors.textMain,
+              color: colors.premiumBg,
               backgroundColor: 'transparent',
             }}
           />
