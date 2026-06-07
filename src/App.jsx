@@ -49,7 +49,7 @@ function App() {
   const [scannedGuest, setScannedGuest] = useState(null)
   const [configWarning, setConfigWarning] = useState('')
   const [showWelcomeBurst, setShowWelcomeBurst] = useState(false)
-  const [scanPulse, setScanPulse] = useState(true)
+  const [scanPulse, setScanPulse] = useState(false)
   const [stats, setStats] = useState({
     boarded: 0,
     total: 0,
