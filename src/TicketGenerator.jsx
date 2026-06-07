@@ -184,7 +184,7 @@ function BoardingPass({ person }) {
         <div style={{ width: '18px', display: 'flex', alignItems: 'stretch', justifyContent: 'center', position: 'relative', flexShrink: 0 }}>
           <div style={{ position: 'absolute', top: '-2px', left: '50%', transform: 'translateX(-50%)', width: '14px', height: '8px', borderRadius: '0 0 8px 8px', background: '#f0efe9', border: `1.5px solid ${borderColor}`, borderTop: 'none' }} />
           <svg width="4" style={{ flex: 1, margin: '8px 0', overflow: 'visible' }} preserveAspectRatio="none">
-            <line x1="3" y1="0" x2="3" y2="100%" stroke={borderColor} strokeWidth="4" strokeDasharray="8 5" />
+            <line x1="7" y1="0" x2="7" y2="100%" stroke={borderColor} strokeWidth="4" strokeDasharray="8 5" />
           </svg>
           <div style={{ position: 'absolute', bottom: '-2px', left: '50%', transform: 'translateX(-50%)', width: '14px', height: '8px', borderRadius: '8px 8px 0 0', background: '#f0efe9', border: `1.5px solid ${borderColor}`, borderBottom: 'none' }} />
         </div>
