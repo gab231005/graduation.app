@@ -91,7 +91,7 @@ function BoardingPass({ person }) {
       style={{
         width: '100%',
         maxWidth: '940px',
-        aspectRatio: '3.15 / 1',
+        aspectRatio: '3 / 1',
         backgroundColor: isGraduate ? 'transparent' : '#ffffff',
         backgroundImage: isGraduate
           ? `linear-gradient(rgba(255,255,255,0.50), rgba(255,255,255,0.50)), url(${diamondBackground})`
@@ -121,7 +121,7 @@ function BoardingPass({ person }) {
           </div>
 
           {/* Content: 3 columns */}
-          <div style={{ flex: 1, padding: '1px 12px 0 12px', display: 'flex', gap: '7px', alignItems: 'flex-start', minHeight: 0 }}>
+          <div style={{ flex: 1, padding: '5px 12px 8px 12px', display: 'flex', gap: '7px', alignItems: 'flex-start', minHeight: 0, boxSizing: 'border-box' }}>
 
             {/* Col 1: SEAT / TIME / GATE */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', width: '104px', flexShrink: 0, paddingTop: '0', marginBottom: '0' }}>
