@@ -216,7 +216,7 @@ function BoardingPass({ person }) {
               <img
                 src={logoDoodle}
                 alt="SMTM 主恩大专"
-                style={{ width: '206px', height: 'auto', maxHeight: '128px', objectFit: 'contain', display: 'block', maxWidth: '100%' }}
+                style={{ width: '198px', height: 'auto', maxHeight: '128px', objectFit: 'contain', display: 'block', maxWidth: '100%' }}
               />
             </div>
             <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '2px 6px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
