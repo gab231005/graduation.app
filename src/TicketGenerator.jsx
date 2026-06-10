@@ -4,7 +4,7 @@ import html2canvas from 'html2canvas'
 import { supabase } from './lib/supabase'
 import logoDoodle from './assets/logo_doodle.png'
 
-const FLIGHT_NO = 'GD2026'
+const FLIGHT_NO = 'BKI2026'
 const TIME = '18:00'
 const DATE = '13 JUNE 2026'
 const GATE = '01'
@@ -65,13 +65,13 @@ function BoardingPass({ person }) {
   const isGraduate = person.type === 'graduate'
   const seat = formatSeat(person.group_num)
 
-  const accentColor = isGraduate ? '#c9a227' : '#1a3a6b'
-  const accentLight = isGraduate ? '#f5e6b2' : '#dbeafe'
-  const borderColor = isGraduate ? '#c9a227' : '#1a3a6b'
-  const headerBg = isGraduate ? '#0b1a33' : '#1a3a6b'
-  const headerText = isGraduate ? '#c9a227' : '#ffffff'
-  const footerBg = isGraduate ? '#0b1a33' : '#1a3a6b'
-  const footerText = isGraduate ? '#c9a227' : '#e0eaff'
+  const accentColor = isGraduate ? '#C0C0C0' : '#1a3a6b'
+  const accentLight = isGraduate ? '#d9f5fb' : '#dbeafe'
+  const borderColor = isGraduate ? '#0ABDE3' : '#1a3a6b'
+  const headerBg = isGraduate ? '#0ABDE3' : '#1a3a6b'
+  const headerText = isGraduate ? '#C0C0C0' : '#dbeafe'
+  const footerBg = isGraduate ? '#0ABDE3' : '#1a3a6b'
+  const footerText = isGraduate ? '#C0C0C0' : '#dbeafe'
   const labelColor = '#555'
   const valueColor = '#111'
 
@@ -107,7 +107,7 @@ function BoardingPass({ person }) {
           {/* Header bar */}
           <div style={{ background: headerBg, padding: '8px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ color: headerText, fontWeight: 900, fontSize: '13px', letterSpacing: '1.5px' }}>{AIRLINE}</span>
-            <span style={{ background: accentLight, color: accentColor, fontWeight: 700, fontSize: '11px', padding: '3px 10px', borderRadius: '3px', letterSpacing: '1px' }}>2023-2026</span>
+            <span style={{ background: accentLight, color: accentColor, fontWeight: 700, fontSize: '11px', padding: '3px 10px', borderRadius: '3px', letterSpacing: '1px' }}>2026</span>
           </div>
 
           {/* Content: 3 columns */}
@@ -139,14 +139,14 @@ function BoardingPass({ person }) {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              width: '96px',
+              width: '250px',
               flexShrink: 0,
               paddingBottom: '14px',
             }}>
-              <div style={{ background: '#f0efe9', padding: '5px', borderRadius: '4px', border: `1.5px solid ${borderColor}` }}>
-                <QRCodeCanvas value={qrData} size={76} level="H" />
+              <div style={{ background: '#f0efe9', padding: '4px', borderRadius: '4px', border: `1.5px solid ${borderColor}` }}>
+                <QRCodeCanvas value={qrData} size={228} level="H" />
               </div>
-              <div style={{ fontSize: '8px', fontWeight: 700, color: labelColor, letterSpacing: '1px', textAlign: 'center' }}>SCAN TO BOARD</div>
+              <div style={{ fontSize: '7px', fontWeight: 700, color: labelColor, letterSpacing: '1px', textAlign: 'center' }}>SCAN TO BOARD</div>
             </div>
 
             {/* Col 3: flight label + motto + notice */}
@@ -156,17 +156,17 @@ function BoardingPass({ person }) {
               <div style={{
                 border: `1.5px solid ${borderColor}`,
                 borderRadius: '4px',
-                padding: '10px 14px',
-                flex: 1,
+                padding: '6px 10px',
                 display: 'flex',
                 alignItems: 'center',
+                minHeight: '72px',
               }}>
                 <div style={{
-                  fontSize: '13px',
+                  fontSize: '11px',
                   fontWeight: 700,
                   color: '#111111',
                   fontFamily: '"STKaiti", "KaiTi", "楷体", "FangSong", serif',
-                  lineHeight: 1.8,
+                  lineHeight: 1.45,
                   letterSpacing: '0.5px',
                 }}>
                   {MOTTO}
