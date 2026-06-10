@@ -73,9 +73,10 @@ function BoardingPass({ person }) {
   const headerText = isGraduate ? '#7B2CBF' : '#dbeafe'
   const footerBg = isGraduate ? 'rgba(186, 182, 255, 0.86)' : '#1a3a6b'
   const footerText = isGraduate ? '#7B2CBF' : '#dbeafe'
-  const labelColor = isGraduate ? '#CDB7FF' : '#555'
-  const valueColor = isGraduate ? '#5B2A86' : '#111'
-  const scanColor = '#777'
+  const labelColor = isGraduate ? '#5B2A86' : '#555'
+  const valueColor = isGraduate ? '#111111' : '#111'
+  const scanColor = '#111111'
+  const airplaneColor = isGraduate ? '#D4AF37' : accentColor
 
   const qrData = JSON.stringify({
     id: person.id,
@@ -158,7 +159,7 @@ function BoardingPass({ person }) {
               <div style={{ background: 'rgba(255,255,255,0.82)', padding: '3px', borderRadius: '4px', border: `1.5px solid ${borderColor}`, backdropFilter: 'blur(2px)' }}>
                 <QRCodeCanvas value={qrData} size={250} level="H" />
               </div>
-              <div style={{ fontSize: '12px', fontWeight: 900, color: labelColor, letterSpacing: '1px', textAlign: 'center' }}>SCAN TO BOARD</div>
+              <div style={{ fontSize: '12px', fontWeight: 900, color: scanColor, letterSpacing: '1px', textAlign: 'center' }}>SCAN TO BOARD</div>
             </div>
 
             {/* Col 3: flight label + motto + notice */}
@@ -224,7 +225,7 @@ function BoardingPass({ person }) {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '25px', fontWeight: 900, color: valueColor, letterSpacing: '0.7px' }}>
                 <span>{FROM_CODE}</span>
-                <span style={{ color: accentColor, fontSize: '30px' }}>✈</span>
+                <span style={{ color: airplaneColor, fontSize: '30px' }}>✈</span>
                 <span>{TO_CODE}</span>
               </div>
             </div>
