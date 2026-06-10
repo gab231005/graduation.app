@@ -121,22 +121,22 @@ function BoardingPass({ person }) {
           </div>
 
           {/* Content: 3 columns */}
-          <div style={{ flex: 1, padding: '22px 24px 14px 16px', display: 'flex', gap: '14px', alignItems: 'center', minHeight: 0, boxSizing: 'border-box' }}>
+          <div style={{ flex: 1, padding: '32px 24px 24px 16px', display: 'flex', gap: '14px', alignItems: 'stretch', minHeight: 0, boxSizing: 'border-box' }}>
 
             {/* Col 1: SEAT / TIME / GATE */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '130px', flexShrink: 0 }}>
-              <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '4px 10px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '130px', flexShrink: 0, justifyContent: 'space-between' }}>
+              <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '10px 10px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
                 <div style={{ fontSize: '8px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>SEAT</div>
                 <div style={{ fontSize: '21px', fontWeight: 900, color: valueColor, lineHeight: 1.05, letterSpacing: '2px' }}>{seat}</div>
               </div>
 
-              <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '4px 10px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
+              <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '10px 10px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
                 <div style={{ fontSize: '8px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>TIME</div>
                 <div style={{ fontSize: '17px', fontWeight: 900, color: valueColor, lineHeight: 1.05 }}>{TIME}</div>
                 <div style={{ fontSize: '7px', color: labelColor, marginTop: '1px' }}>DATE  {DATE}</div>
               </div>
 
-              <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '4px 10px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
+              <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '10px 10px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
                 <div style={{ fontSize: '8px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>BOARDING GATE</div>
                 <div style={{ fontSize: '12px', fontWeight: 900, color: valueColor, lineHeight: 1.1, letterSpacing: '1px' }}>主恩堂圣堂</div>
               </div>
@@ -147,21 +147,21 @@ function BoardingPass({ person }) {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              justifyContent: 'flex-start',
+              justifyContent: 'space-between',
               gap: '9px',
-              width: '300px',
+              width: '310px',
               flexShrink: 0,
               paddingBottom: '0',
               paddingTop: '0',
             }}>
               <div style={{ background: 'rgba(255,255,255,0.82)', padding: '3px', borderRadius: '4px', border: `1.5px solid ${borderColor}`, backdropFilter: 'blur(2px)' }}>
-                <QRCodeCanvas value={qrData} size={286} level="H" />
+                <QRCodeCanvas value={qrData} size={300} level="H" />
               </div>
               <div style={{ fontSize: '5px', fontWeight: 700, color: labelColor, letterSpacing: '1px', textAlign: 'center' }}>SCAN TO BOARD</div>
             </div>
 
             {/* Col 3: flight label + motto + notice */}
-            <div style={{ flex: '0 0 168px', maxWidth: '168px', minWidth: '168px', display: 'flex', flexDirection: 'column', gap: '10px', minHeight: 0, justifyContent: 'center' }}>
+            <div style={{ flex: '0 0 168px', maxWidth: '168px', minWidth: '168px', display: 'flex', flexDirection: 'column', gap: '10px', minHeight: 0, justifyContent: 'space-between' }}>
               <div style={{ fontSize: '9px', color: labelColor, fontWeight: 700, letterSpacing: '1px', textAlign: 'center' }}>FLIGHT {FLIGHT_NO}</div>
 
               <div style={{
@@ -170,7 +170,7 @@ function BoardingPass({ person }) {
                 padding: '8px 9px',
                 display: 'flex',
                 alignItems: 'center',
-                minHeight: '86px',
+                minHeight: '128px',
                 background: 'rgba(255,255,255,0.82)',
                 backdropFilter: 'blur(2px)',
               }}>
@@ -186,7 +186,7 @@ function BoardingPass({ person }) {
                 </div>
               </div>
 
-              <div style={{ fontSize: '7px', color: '#777', lineHeight: 1.35, padding: '7px 8px', background: 'rgba(255,255,255,0.72)', borderRadius: '4px', textAlign: 'center' }}>
+              <div style={{ fontSize: '7px', color: '#777', lineHeight: 1.35, padding: '8px 8px', minHeight: '72px', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.72)', borderRadius: '4px', textAlign: 'center' }}>
                 <div style={{ fontWeight: 700 }}>重要提示: 登机口于起飞前10分钟关闭</div>
                 <div>NOTICE: GATES WILL BE CLOSED 10 MINUTES BEFORE DEPARTURE TIME</div>
               </div>
