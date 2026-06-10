@@ -91,7 +91,7 @@ function BoardingPass({ person }) {
       style={{
         width: '100%',
         maxWidth: '940px',
-        aspectRatio: '3 / 1',
+        aspectRatio: '2 / 1',
         backgroundColor: isGraduate ? 'transparent' : '#ffffff',
         backgroundImage: isGraduate
           ? `linear-gradient(rgba(255,255,255,0.50), rgba(255,255,255,0.50)), url(${diamondBackground})`
@@ -121,10 +121,10 @@ function BoardingPass({ person }) {
           </div>
 
           {/* Content: 3 columns */}
-          <div style={{ flex: 1, padding: '5px 12px 8px 12px', display: 'flex', gap: '7px', alignItems: 'flex-start', minHeight: 0, boxSizing: 'border-box' }}>
+          <div style={{ flex: 1, padding: '14px 12px', display: 'flex', gap: '10px', alignItems: 'center', minHeight: 0, boxSizing: 'border-box' }}>
 
             {/* Col 1: SEAT / TIME / GATE */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', width: '104px', flexShrink: 0, paddingTop: '0', marginBottom: '0' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '104px', flexShrink: 0 }}>
               <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '4px 10px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
                 <div style={{ fontSize: '8px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>SEAT</div>
                 <div style={{ fontSize: '21px', fontWeight: 900, color: valueColor, lineHeight: 1.05, letterSpacing: '2px' }}>{seat}</div>
@@ -148,7 +148,7 @@ function BoardingPass({ person }) {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'flex-start',
-              gap: '2px',
+              gap: '6px',
               width: '184px',
               flexShrink: 0,
               paddingBottom: '0',
@@ -161,12 +161,12 @@ function BoardingPass({ person }) {
             </div>
 
             {/* Col 3: flight label + motto + notice */}
-            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '4px', minHeight: 0 }}>
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '78px', marginBottom: '-8px', overflow: 'visible', flexShrink: 0 }}>
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '8px', minHeight: 0 }}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '76px', marginBottom: '0', overflow: 'visible', flexShrink: 0 }}>
                 <img
                   src={logoDoodle}
                   alt="SMTM 主恩大专"
-                  style={{ width: '176px', height: '112px', objectFit: 'contain', display: 'block', maxWidth: '100%' }}
+                  style={{ width: '176px', height: 'auto', maxHeight: '76px', objectFit: 'contain', display: 'block', maxWidth: '100%' }}
                 />
               </div>
 
@@ -217,7 +217,7 @@ function BoardingPass({ person }) {
             {AIRLINE}
           </div>
 
-          <div style={{ flex: 1, padding: '1px 5px 3px', display: 'flex', flexDirection: 'column', gap: '4px', justifyContent: 'center' }}>
+          <div style={{ flex: 1, padding: '14px 5px', display: 'flex', flexDirection: 'column', gap: '8px', justifyContent: 'center', boxSizing: 'border-box' }}>
             <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '2px 6px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '6px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '1px' }}>
                 <span>FROM</span><span>TO</span>
