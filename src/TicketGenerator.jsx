@@ -170,16 +170,16 @@ function BoardingPass({ person }) {
                 padding: '8px 9px',
                 display: 'flex',
                 alignItems: 'center',
-                minHeight: '130px',
+                minHeight: '150px',
                 background: 'rgba(255,255,255,0.82)',
                 backdropFilter: 'blur(2px)',
               }}>
                 <div style={{
-                  fontSize: '15px',
-                  fontWeight: 2000,
+                  fontSize: '13px',
+                  fontWeight: 1400,
                   color: '#111111',
                   fontFamily: '"STKaiti", "KaiTi", "楷体", "FangSong", serif',
-                  lineHeight: 2,
+                  lineHeight: 1.3,
                   letterSpacing: '0.5px',
                 }}>
                   {MOTTO}
@@ -205,7 +205,7 @@ function BoardingPass({ person }) {
 
         {/* ════ RIGHT STUB ════ */}
         <div style={{ width: '220px', flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
-          <div style={{ background: headerBg, padding: '7px 12px', minHeight: '40px', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', color: headerText, fontWeight: 900, fontSize: '10px', letterSpacing: '1px', lineHeight: 1 }}>
+          <div style={{ background: headerBg, padding: '7px 12px', minHeight: '40px', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', color: headerText, fontWeight: 900, fontSize: '14px', letterSpacing: '1px', lineHeight: 1 }}>
             {AIRLINE}
           </div>
 
