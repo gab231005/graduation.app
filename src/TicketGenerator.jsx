@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { QRCodeCanvas } from 'qrcode.react'
 import html2canvas from 'html2canvas'
 import { supabase } from './lib/supabase'
@@ -149,7 +149,7 @@ function BoardingPass({ person }) {
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: '9px',
-              width: '310px',
+              width: '130px',
               flexShrink: 0,
               paddingBottom: '0',
               paddingTop: '0',
@@ -170,7 +170,7 @@ function BoardingPass({ person }) {
                 padding: '8px 9px',
                 display: 'flex',
                 alignItems: 'center',
-                minHeight: '128px',
+                minHeight: '130px',
                 background: 'rgba(255,255,255,0.82)',
                 backdropFilter: 'blur(2px)',
               }}>
