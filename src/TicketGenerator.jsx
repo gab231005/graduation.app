@@ -56,7 +56,7 @@ function Seal({ color = '#c9a227', size = 72 }) {
     <img
       src={logoDoodle}
       alt="SMTM 主恩大专"
-      style={{ width: '230px', height: '170px', objectFit: 'contain' }}
+      style={{ width: '240px', height: '170px', objectFit: 'contain' }}
       onError={() => setImgFailed(true)}
     />
   )
@@ -91,6 +91,7 @@ function BoardingPass({ person }) {
       style={{
         width: '100%',
         maxWidth: '800px',
+        aspectRatio: '2.5 / 1',
         backgroundImage: `linear-gradient(rgba(255,255,255,0.50), rgba(255,255,255,0.50)), url(${diamondBackground})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -103,7 +104,7 @@ function BoardingPass({ person }) {
       }}
     >
       {/* ══ MAIN BODY ══ */}
-      <div style={{ display: 'flex', minHeight: '250px' }}>
+      <div style={{ display: 'flex', minHeight: '236px' }}>
 
         {/* ════ LEFT MAIN SECTION ════ */}
         <div style={{ flex: '1 1 0', minWidth: 0, display: 'flex', flexDirection: 'column' }}>
@@ -111,11 +112,11 @@ function BoardingPass({ person }) {
           {/* Header bar */}
           <div style={{ background: headerBg, padding: '8px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', minHeight: '44px', boxSizing: 'border-box' }}>
             <span style={{ color: headerText, fontWeight: 900, fontSize: '13px', letterSpacing: '1.5px', lineHeight: 1 }}>{AIRLINE}</span>
-            <span style={{ background: accentLight, color: accentColor, fontWeight: 700, fontSize: '11px', minWidth: '64px', height: '28px', padding: '0 12px', borderRadius: '3px', letterSpacing: '1px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', lineHeight: 1 }}>2026</span>
+            <span style={{ background: accentLight, color: headerText, fontWeight: 700, fontSize: '11px', minWidth: '64px', height: '28px', padding: '0 12px', borderRadius: '3px', letterSpacing: '1px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', lineHeight: 1 }}>2026</span>
           </div>
 
           {/* Content: 3 columns */}
-          <div style={{ flex: 1, padding: '8px 16px 0 16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+          <div style={{ flex: 1, padding: '6px 16px 0 16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
 
             {/* Col 1: SEAT / TIME / GATE */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', width: '128px', flexShrink: 0, paddingTop: '0', marginBottom: '0' }}>
@@ -203,27 +204,27 @@ function BoardingPass({ person }) {
             {AIRLINE}
           </div>
 
-          <div style={{ flex: 1, padding: '6px 14px 8px', display: 'flex', flexDirection: 'column', gap: '8px', justifyContent: 'flex-start' }}>
+          <div style={{ flex: 1, padding: '4px 12px 6px', display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'flex-start' }}>
             <div style={{ display: 'flex', justifyContent: 'center', background: 'transparent', borderRadius: 0, padding: 0, marginBottom: '2px', overflow: 'visible' }}>
               <Seal color={accentColor} size={80} />
             </div>
 
-            <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '6px 10px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '4px' }}>
+            <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '5px 9px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '8px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '3px' }}>
                 <span>FROM</span><span>TO</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '17px', fontWeight: 900, color: valueColor, letterSpacing: '1px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '15px', fontWeight: 900, color: valueColor, letterSpacing: '1px' }}>
                 <span>{FROM_CODE}</span>
-                <span style={{ color: accentColor, fontSize: '16px' }}>✈</span>
+                <span style={{ color: accentColor, fontSize: '14px' }}>✈</span>
                 <span>{TO_CODE}</span>
               </div>
             </div>
 
-            <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '6px 10px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
-              <div style={{ fontSize: '9px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '4px' }}>NAME</div>
+            <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '5px 9px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
+              <div style={{ fontSize: '8px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '3px' }}>NAME</div>
               <div
                 style={{
-                  fontSize: '20px',
+                  fontSize: '18px',
                   fontWeight: 900,
                   color: valueColor,
                   letterSpacing: '1px',
