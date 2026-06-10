@@ -70,9 +70,9 @@ function BoardingPass({ person }) {
   const accentLight = isGraduate ? 'rgba(255,255,255,0.82)' : '#dbeafe'
   const borderColor = isGraduate ? '#0ABDE3' : '#1a3a6b'
   const headerBg = isGraduate ? 'rgba(186, 182, 255, 0.86)' : '#1a3a6b'
-  const headerText = isGraduate ? '#C0C0C0' : '#dbeafe'
+  const headerText = isGraduate ? '#D4AF37' : '#dbeafe'
   const footerBg = isGraduate ? 'rgba(186, 182, 255, 0.86)' : '#1a3a6b'
-  const footerText = isGraduate ? '#C0C0C0' : '#dbeafe'
+  const footerText = isGraduate ? '#D4AF37' : '#dbeafe'
   const labelColor = '#555'
   const valueColor = '#111'
 
@@ -119,7 +119,7 @@ function BoardingPass({ person }) {
 
             {/* Col 1: SEAT / TIME / GATE */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '128px', flexShrink: 0, paddingTop: '0', marginBottom: '0' }}>
-              <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '4px 10px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
+              <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '4px 10px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)', boxShadow: '0 0 0 1px rgba(212,175,55,0.35), 0 2px 8px rgba(0,0,0,0.08)' }}>
                 <div style={{ fontSize: '10px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>SEAT</div>
                 <div style={{ fontSize: '30px', fontWeight: 900, color: valueColor, lineHeight: 1.1, letterSpacing: '2px' }}>{seat}</div>
               </div>
