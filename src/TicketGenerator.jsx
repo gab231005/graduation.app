@@ -68,13 +68,14 @@ function BoardingPass({ person }) {
 
   const accentColor = isGraduate ? '#C0C0C0' : '#1a3a6b'
   const accentLight = isGraduate ? 'rgba(255,255,255,0.82)' : '#dbeafe'
-  const borderColor = isGraduate ? '#0ABDE3' : '#1a3a6b'
+  const borderColor = isGraduate ? '#D4AF37' : '#1a3a6b'
   const headerBg = isGraduate ? 'rgba(186, 182, 255, 0.86)' : '#1a3a6b'
   const headerText = isGraduate ? '#7B2CBF' : '#dbeafe'
   const footerBg = isGraduate ? 'rgba(186, 182, 255, 0.86)' : '#1a3a6b'
   const footerText = isGraduate ? '#7B2CBF' : '#dbeafe'
-  const labelColor = '#555'
-  const valueColor = '#111'
+  const labelColor = isGraduate ? '#CDB7FF' : '#555'
+  const valueColor = isGraduate ? '#5B2A86' : '#111'
+  const scanColor = '#777'
 
   const qrData = JSON.stringify({
     id: person.id,
@@ -187,8 +188,8 @@ function BoardingPass({ person }) {
               </div>
 
               <div style={{ fontSize: '8px', color: '#777', lineHeight: 1.35, padding: '2px 2px', minHeight: '72px', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.72)', borderRadius: '4px', textAlign: 'center' }}>
-                <div style={{ fontWeight: 700 }}>重要提示: 登机口于起飞前10分钟关闭</div>
-                <div>NOTICE: GATES WILL BE CLOSED 10 MINUTES BEFORE DEPARTURE TIME</div>
+                 <div style={{ fontWeight: 700 }}>重要提示: 登机口于起飞前10分钟关闭</div>
+                 <div>NOTICE: GATES WILL BE CLOSED 10 MINUTES BEFORE DEPARTURE TIME</div>
               </div>
             </div>
           </div>
