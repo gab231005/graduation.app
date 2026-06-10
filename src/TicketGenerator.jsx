@@ -176,10 +176,10 @@ function BoardingPass({ person }) {
               }}>
                 <div style={{
                   fontSize: '9px',
-                  fontWeight: 1400,
+                  fontWeight: 2000,
                   color: '#111111',
                   fontFamily: '"STKaiti", "KaiTi", "楷体", "FangSong", serif',
-                  lineHeight: 1.45,
+                  lineHeight: 2,
                   letterSpacing: '0.5px',
                 }}>
                   {MOTTO}
@@ -218,7 +218,7 @@ function BoardingPass({ person }) {
               />
             </div>
             <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '2px 6px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '6px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '1px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: labelColor, fontWeight: 1500, letterSpacing: '1px', marginBottom: '1px' }}>
                 <span>FROM</span><span>TO</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', fontWeight: 900, color: valueColor, letterSpacing: '0.7px' }}>
@@ -229,10 +229,10 @@ function BoardingPass({ person }) {
             </div>
 
             <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '2px 6px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
-              <div style={{ fontSize: '6px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '1px' }}>NAME</div>
+              <div style={{ fontSize: '6px', color: labelColor, fontWeight: 1500, letterSpacing: '1px', marginBottom: '1px' }}>NAME</div>
               <div
                 style={{
-                  fontSize: '13px',
+                  fontSize: '17px',
                   fontWeight: 900,
                   color: valueColor,
                   letterSpacing: '1px',
