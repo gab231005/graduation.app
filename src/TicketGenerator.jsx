@@ -116,8 +116,8 @@ function BoardingPass({ person }) {
 
           {/* Header bar */}
           <div style={{ background: headerBg, padding: '8px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', minHeight: '42px', boxSizing: 'border-box' }}>
-            <span style={{ color: headerText, fontWeight: 900, fontSize: '11px', letterSpacing: '1.2px', lineHeight: 1 }}>{AIRLINE}</span>
-            <span style={{ background: accentLight, color: isGraduate ? headerText : headerBg, fontWeight: 700, fontSize: '9px', minWidth: '54px', height: '22px', padding: '0 9px', borderRadius: '3px', letterSpacing: '1px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', lineHeight: 1 }}>2026</span>
+            <span style={{ color: headerText, fontWeight: 900, fontSize: '14px', letterSpacing: '1.2px', lineHeight: 1 }}>{AIRLINE}</span>
+            <span style={{ background: accentLight, color: isGraduate ? headerText : headerBg, fontWeight: 700, fontSize: '11px', minWidth: '54px', height: '22px', padding: '0 9px', borderRadius: '3px', letterSpacing: '1px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', lineHeight: 1 }}>2026</span>
           </div>
 
           {/* Content: 3 columns */}
