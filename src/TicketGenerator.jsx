@@ -159,8 +159,16 @@ function BoardingPass({ person }) {
             </div>
 
             {/* Col 3: flight label + motto + notice */}
-            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <div style={{ fontSize: '10px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>FLIGHT {FLIGHT_NO}</div>
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '2px' }}>
+                <img
+                  src={logoDoodle}
+                  alt="SMTM 主恩大专"
+                  style={{ width: '112px', height: '76px', objectFit: 'contain', display: 'block' }}
+                />
+              </div>
+
+              <div style={{ fontSize: '10px', color: labelColor, fontWeight: 700, letterSpacing: '1px', textAlign: 'center' }}>FLIGHT {FLIGHT_NO}</div>
 
               <div style={{
                 border: `1.5px solid ${borderColor}`,
@@ -208,10 +216,6 @@ function BoardingPass({ person }) {
           </div>
 
           <div style={{ flex: 1, padding: '2px 6px 4px', display: 'flex', flexDirection: 'column', gap: '3px', justifyContent: 'flex-start' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', background: 'transparent', borderRadius: 0, padding: 0, marginBottom: '0', overflow: 'visible' }}>
-              <Seal color={accentColor} size={52} />
-            </div>
-
             <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '2px 6px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '5px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '1px' }}>
                 <span>FROM</span><span>TO</span>
