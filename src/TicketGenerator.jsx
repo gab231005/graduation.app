@@ -105,9 +105,9 @@ function BoardingPass({ person }) {
         <div style={{ flex: '1 1 0', minWidth: 0, display: 'flex', flexDirection: 'column' }}>
 
           {/* Header bar */}
-          <div style={{ background: headerBg, padding: '8px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: headerText, fontWeight: 900, fontSize: '13px', letterSpacing: '1.5px' }}>{AIRLINE}</span>
-            <span style={{ background: accentLight, color: accentColor, fontWeight: 700, fontSize: '11px', padding: '3px 10px', borderRadius: '3px', letterSpacing: '1px' }}>2026</span>
+          <div style={{ background: headerBg, padding: '8px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', minHeight: '44px', boxSizing: 'border-box' }}>
+            <span style={{ color: headerText, fontWeight: 900, fontSize: '13px', letterSpacing: '1.5px', lineHeight: 1 }}>{AIRLINE}</span>
+            <span style={{ background: accentLight, color: accentColor, fontWeight: 700, fontSize: '11px', minWidth: '64px', height: '28px', padding: '0 12px', borderRadius: '3px', letterSpacing: '1px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', lineHeight: 1 }}>2026</span>
           </div>
 
           {/* Content: 3 columns */}
@@ -192,7 +192,7 @@ function BoardingPass({ person }) {
 
         {/* ════ RIGHT STUB ════ */}
         <div style={{ width: '200px', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ background: headerBg, padding: '8px 10px', color: headerText, fontWeight: 900, fontSize: '11px', letterSpacing: '1px' }}>
+          <div style={{ background: headerBg, padding: '8px 16px', minHeight: '44px', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', color: headerText, fontWeight: 900, fontSize: '11px', letterSpacing: '1px', lineHeight: 1 }}>
             {AIRLINE}
           </div>
 
