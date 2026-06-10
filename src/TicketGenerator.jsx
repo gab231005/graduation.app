@@ -149,13 +149,13 @@ function BoardingPass({ person }) {
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: '9px',
-              width: '130px',
+              width: '300px',
               flexShrink: 0,
               paddingBottom: '0',
               paddingTop: '0',
             }}>
               <div style={{ background: 'rgba(255,255,255,0.82)', padding: '3px', borderRadius: '4px', border: `1.5px solid ${borderColor}`, backdropFilter: 'blur(2px)' }}>
-                <QRCodeCanvas value={qrData} size={260} level="H" />
+                <QRCodeCanvas value={qrData} size={270} level="H" />
               </div>
               <div style={{ fontSize: '5px', fontWeight: 700, color: labelColor, letterSpacing: '1px', textAlign: 'center' }}>SCAN TO BOARD</div>
             </div>
