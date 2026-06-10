@@ -161,7 +161,7 @@ function BoardingPass({ person }) {
             </div>
 
             {/* Col 3: flight label + motto + notice */}
-            <div style={{ flex: '0 0 168px', maxWidth: '168px', minWidth: '168px', display: 'flex', flexDirection: 'column', gap: '10px', minHeight: 0, justifyContent: 'space-between' }}>
+            <div style={{ flex: '0 0 168px', maxWidth: '130px', minWidth: '130px', display: 'flex', flexDirection: 'column', gap: '10px', minHeight: 0, justifyContent: 'space-between' }}>
               <div style={{ fontSize: '9px', color: labelColor, fontWeight: 700, letterSpacing: '1px', textAlign: 'center' }}>FLIGHT {FLIGHT_NO}</div>
 
               <div style={{
