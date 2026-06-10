@@ -118,7 +118,7 @@ function BoardingPass({ person }) {
           <div style={{ flex: 1, padding: '12px 16px 0 16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
 
             {/* Col 1: SEAT / TIME / GATE */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '128px', flexShrink: 0, paddingTop: '5', marginBottom: '0' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '128px', flexShrink: 0, paddingTop: '0', marginBottom: '0' }}>
               <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '4px 10px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)', boxShadow: '0 0 0 1px rgba(212,175,55,0.35), 0 2px 8px rgba(0,0,0,0.08)' }}>
                 <div style={{ fontSize: '10px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>SEAT</div>
                 <div style={{ fontSize: '30px', fontWeight: 900, color: valueColor, lineHeight: 1.1, letterSpacing: '2px' }}>{seat}</div>
@@ -148,7 +148,7 @@ function BoardingPass({ person }) {
               paddingBottom: '0',
               paddingTop: '4px',
             }}>
-              <div style={{ background: 'rgba(255,255,255,0.82)', padding: '4px', borderRadius: '4px', border: `1.5px solid ${borderColor}`, backdropFilter: 'blur(2px)' }}>
+              <div style={{ background: 'rgba(255,255,255,0.82)', padding: '0px', borderRadius: '4px', border: `1.5px solid ${borderColor}`, backdropFilter: 'blur(2px)' }}>
                 <QRCodeCanvas value={qrData} size={228} level="H" />
               </div>
               <div style={{ fontSize: '7px', fontWeight: 700, color: labelColor, letterSpacing: '1px', textAlign: 'center' }}>SCAN TO BOARD</div>
