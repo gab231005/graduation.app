@@ -115,7 +115,7 @@ function BoardingPass({ person }) {
           {/* Header bar */}
           <div style={{ background: headerBg, padding: '7px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', minHeight: '40px', boxSizing: 'border-box' }}>
             <span style={{ color: headerText, fontWeight: 900, fontSize: '12px', letterSpacing: '1.3px', lineHeight: 1 }}>{AIRLINE}</span>
-            <span style={{ background: accentLight, color: headerText, fontWeight: 700, fontSize: '10px', minWidth: '58px', height: '24px', padding: '0 10px', borderRadius: '3px', letterSpacing: '1px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', lineHeight: 1 }}>2026</span>
+            <span style={{ background: accentLight, color: isGraduate ? headerText : headerBg, fontWeight: 700, fontSize: '10px', minWidth: '58px', height: '24px', padding: '0 10px', borderRadius: '3px', letterSpacing: '1px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', lineHeight: 1 }}>2026</span>
           </div>
 
           {/* Content: 3 columns */}
@@ -202,32 +202,32 @@ function BoardingPass({ person }) {
         </div>
 
         {/* ════ RIGHT STUB ════ */}
-        <div style={{ width: '170px', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ width: '160px', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
           <div style={{ background: headerBg, padding: '7px 14px', minHeight: '40px', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', color: headerText, fontWeight: 900, fontSize: '10px', letterSpacing: '1px', lineHeight: 1 }}>
             {AIRLINE}
           </div>
 
-          <div style={{ flex: 1, padding: '2px 8px 4px', display: 'flex', flexDirection: 'column', gap: '4px', justifyContent: 'flex-start' }}>
+          <div style={{ flex: 1, padding: '2px 6px 4px', display: 'flex', flexDirection: 'column', gap: '3px', justifyContent: 'flex-start' }}>
             <div style={{ display: 'flex', justifyContent: 'center', background: 'transparent', borderRadius: 0, padding: 0, marginBottom: '0', overflow: 'visible' }}>
-              <Seal color={accentColor} size={62} />
+              <Seal color={accentColor} size={52} />
             </div>
 
-            <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '3px 7px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '6px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '1px' }}>
+            <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '2px 6px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '5px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '1px' }}>
                 <span>FROM</span><span>TO</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', fontWeight: 900, color: valueColor, letterSpacing: '1px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', fontWeight: 900, color: valueColor, letterSpacing: '0.8px' }}>
                 <span>{FROM_CODE}</span>
-                <span style={{ color: accentColor, fontSize: '11px' }}>✈</span>
+                <span style={{ color: accentColor, fontSize: '10px' }}>✈</span>
                 <span>{TO_CODE}</span>
               </div>
             </div>
 
-            <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '3px 7px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
-              <div style={{ fontSize: '6px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '1px' }}>NAME</div>
+            <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '2px 6px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
+              <div style={{ fontSize: '5px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '1px' }}>NAME</div>
               <div
                 style={{
-                  fontSize: '14px',
+                  fontSize: '12px',
                   fontWeight: 900,
                   color: valueColor,
                   letterSpacing: '1px',
