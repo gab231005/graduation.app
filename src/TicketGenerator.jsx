@@ -56,7 +56,7 @@ function Seal({ color = '#c9a227', size = 72 }) {
     <img
       src={logoDoodle}
       alt="SMTM 主恩大专"
-      style={{ width: '180px', height: '128px', objectFit: 'contain' }}
+      style={{ width: '170px', height: '128px', objectFit: 'contain' }}
       onError={() => setImgFailed(true)}
     />
   )
