@@ -56,7 +56,7 @@ function Seal({ color = '#c9a227', size = 72 }) {
     <img
       src={logoDoodle}
       alt="SMTM 主恩大专"
-      style={{ width: '170px', height: '115px', objectFit: 'contain' }}
+      style={{ width: '230px', height: '175px', objectFit: 'contain' }}
       onError={() => setImgFailed(true)}
     />
   )
@@ -70,9 +70,9 @@ function BoardingPass({ person }) {
   const accentLight = isGraduate ? 'rgba(255,255,255,0.82)' : '#dbeafe'
   const borderColor = isGraduate ? '#0ABDE3' : '#1a3a6b'
   const headerBg = isGraduate ? 'rgba(186, 182, 255, 0.86)' : '#1a3a6b'
-  const headerText = isGraduate ? '#D4AF37' : '#dbeafe'
+  const headerText = isGraduate ? '#FFD700' : '#dbeafe'
   const footerBg = isGraduate ? 'rgba(186, 182, 255, 0.86)' : '#1a3a6b'
-  const footerText = isGraduate ? '#D4AF37' : '#dbeafe'
+  const footerText = isGraduate ? '#FFD700' : '#dbeafe'
   const labelColor = '#555'
   const valueColor = '#111'
 
@@ -118,7 +118,7 @@ function BoardingPass({ person }) {
           <div style={{ flex: 1, padding: '12px 16px 0 16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
 
             {/* Col 1: SEAT / TIME / GATE */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '128px', flexShrink: 0, paddingTop: '0', marginBottom: '0' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '128px', flexShrink: 0, paddingTop: '5', marginBottom: '0' }}>
               <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '4px 10px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)', boxShadow: '0 0 0 1px rgba(212,175,55,0.35), 0 2px 8px rgba(0,0,0,0.08)' }}>
                 <div style={{ fontSize: '10px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>SEAT</div>
                 <div style={{ fontSize: '30px', fontWeight: 900, color: valueColor, lineHeight: 1.1, letterSpacing: '2px' }}>{seat}</div>
@@ -204,7 +204,7 @@ function BoardingPass({ person }) {
           </div>
 
           <div style={{ flex: 1, padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: '10px', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', background: 'rgba(255,255,255,0.82)', borderRadius: '4px', padding: '4px 0', overflow: 'visible', backdropFilter: 'blur(2px)' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', background: 'transparent', borderRadius: 0, padding: 0, overflow: 'visible' }}>
               <Seal color={accentColor} size={80} />
             </div>
 
