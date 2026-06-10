@@ -126,18 +126,18 @@ function BoardingPass({ person }) {
             {/* Col 1: SEAT / TIME / GATE */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '130px', flexShrink: 0, justifyContent: 'space-between' }}>
               <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '10px 10px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
-                <div style={{ fontSize: '8px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>SEAT</div>
+                <div style={{ fontSize: '8px', color: labelColor, fontWeight: 800, letterSpacing: '1px' }}>SEAT</div>
                 <div style={{ fontSize: '21px', fontWeight: 900, color: valueColor, lineHeight: 1.05, letterSpacing: '2px' }}>{seat}</div>
               </div>
 
               <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '10px 10px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
-                <div style={{ fontSize: '8px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>TIME</div>
+                <div style={{ fontSize: '8px', color: labelColor, fontWeight: 800, letterSpacing: '1px' }}>TIME</div>
                 <div style={{ fontSize: '17px', fontWeight: 900, color: valueColor, lineHeight: 1.05 }}>{TIME}</div>
                 <div style={{ fontSize: '7px', color: labelColor, marginTop: '1px' }}>DATE  {DATE}</div>
               </div>
 
               <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '10px 10px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
-                <div style={{ fontSize: '8px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>BOARDING GATE</div>
+                <div style={{ fontSize: '8px', color: labelColor, fontWeight: 800, letterSpacing: '1px' }}>BOARDING GATE</div>
                 <div style={{ fontSize: '12px', fontWeight: 900, color: valueColor, lineHeight: 1.1, letterSpacing: '1px' }}>主恩堂圣堂</div>
               </div>
             </div>
@@ -155,7 +155,7 @@ function BoardingPass({ person }) {
               paddingTop: '0',
             }}>
               <div style={{ background: 'rgba(255,255,255,0.82)', padding: '3px', borderRadius: '4px', border: `1.5px solid ${borderColor}`, backdropFilter: 'blur(2px)' }}>
-                <QRCodeCanvas value={qrData} size={130} level="H" />
+                <QRCodeCanvas value={qrData} size={260} level="H" />
               </div>
               <div style={{ fontSize: '5px', fontWeight: 700, color: labelColor, letterSpacing: '1px', textAlign: 'center' }}>SCAN TO BOARD</div>
             </div>
