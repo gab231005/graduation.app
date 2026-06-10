@@ -104,10 +104,12 @@ function BoardingPass({ person }) {
         overflow: 'hidden',
         fontFamily: '"Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif',
         boxShadow: '0 4px 20px rgba(0,0,0,0.14)',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       {/* ══ MAIN BODY ══ */}
-      <div style={{ display: 'flex', minHeight: '156px' }}>
+      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
 
         {/* ════ LEFT MAIN SECTION ════ */}
         <div style={{ flex: '1 1 0', minWidth: 0, display: 'flex', flexDirection: 'column' }}>
@@ -119,7 +121,7 @@ function BoardingPass({ person }) {
           </div>
 
           {/* Content: 3 columns */}
-          <div style={{ flex: 1, padding: '1px 12px 0 12px', display: 'flex', gap: '7px', alignItems: 'flex-start' }}>
+          <div style={{ flex: 1, padding: '1px 12px 0 12px', display: 'flex', gap: '7px', alignItems: 'flex-start', minHeight: 0 }}>
 
             {/* Col 1: SEAT / TIME / GATE */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', width: '104px', flexShrink: 0, paddingTop: '0', marginBottom: '0' }}>
@@ -159,12 +161,12 @@ function BoardingPass({ person }) {
             </div>
 
             {/* Col 3: flight label + motto + notice */}
-            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '2px' }}>
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '4px', minHeight: 0 }}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '78px', marginBottom: '-8px', overflow: 'visible', flexShrink: 0 }}>
                 <img
                   src={logoDoodle}
                   alt="SMTM 主恩大专"
-                  style={{ width: '100px', height: '68px', objectFit: 'contain', display: 'block' }}
+                  style={{ width: '176px', height: '112px', objectFit: 'contain', display: 'block', maxWidth: '100%' }}
                 />
               </div>
 
@@ -248,7 +250,7 @@ function BoardingPass({ person }) {
       </div>
 
       {/* ══ BOTTOM REMINDER BANNER ══ */}
-      <div style={{ background: footerBg, padding: '8px 14px', fontSize: '10px', color: footerText, fontWeight: 600, letterSpacing: '0.5px', lineHeight: 1.25 }}>
+      <div style={{ background: footerBg, padding: '8px 14px', fontSize: '10px', color: footerText, fontWeight: 600, letterSpacing: '0.5px', lineHeight: 1.25, flexShrink: 0 }}>
         REMINDER: {REMINDER}
       </div>
     </div>
