@@ -56,7 +56,7 @@ function Seal({ color = '#c9a227', size = 72 }) {
     <img
       src={logoDoodle}
       alt="SMTM 主恩大专"
-      style={{ width: '200px', height: '145px', objectFit: 'contain' }}
+      style={{ width: '230px', height: '170px', objectFit: 'contain' }}
       onError={() => setImgFailed(true)}
     />
   )
@@ -70,9 +70,9 @@ function BoardingPass({ person }) {
   const accentLight = isGraduate ? 'rgba(255,255,255,0.82)' : '#dbeafe'
   const borderColor = isGraduate ? '#0ABDE3' : '#1a3a6b'
   const headerBg = isGraduate ? 'rgba(186, 182, 255, 0.86)' : '#1a3a6b'
-  const headerText = isGraduate ? '#FFD700' : '#dbeafe'
+  const headerText = isGraduate ? '#7B2CBF' : '#dbeafe'
   const footerBg = isGraduate ? 'rgba(186, 182, 255, 0.86)' : '#1a3a6b'
-  const footerText = isGraduate ? '#FFD700' : '#dbeafe'
+  const footerText = isGraduate ? '#7B2CBF' : '#dbeafe'
   const labelColor = '#555'
   const valueColor = '#111'
 
@@ -103,7 +103,7 @@ function BoardingPass({ person }) {
       }}
     >
       {/* ══ MAIN BODY ══ */}
-      <div style={{ display: 'flex', minHeight: '280px' }}>
+      <div style={{ display: 'flex', minHeight: '250px' }}>
 
         {/* ════ LEFT MAIN SECTION ════ */}
         <div style={{ flex: '1 1 0', minWidth: 0, display: 'flex', flexDirection: 'column' }}>
@@ -115,10 +115,10 @@ function BoardingPass({ person }) {
           </div>
 
           {/* Content: 3 columns */}
-          <div style={{ flex: 1, padding: '12px 16px 0 16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+          <div style={{ flex: 1, padding: '8px 16px 0 16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
 
             {/* Col 1: SEAT / TIME / GATE */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '128px', flexShrink: 0, paddingTop: '4px', marginBottom: '0' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', width: '128px', flexShrink: 0, paddingTop: '0', marginBottom: '0' }}>
               <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '4px 10px', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
                 <div style={{ fontSize: '10px', color: labelColor, fontWeight: 700, letterSpacing: '1px' }}>SEAT</div>
                 <div style={{ fontSize: '30px', fontWeight: 900, color: valueColor, lineHeight: 1.1, letterSpacing: '2px' }}>{seat}</div>
@@ -142,11 +142,11 @@ function BoardingPass({ person }) {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'flex-start',
-              gap: '6px',
+              gap: '4px',
               width: '250px',
               flexShrink: 0,
               paddingBottom: '0',
-              paddingTop: '4px',
+              paddingTop: '0',
             }}>
               <div style={{ background: 'rgba(255,255,255,0.82)', padding: '4px', borderRadius: '4px', border: `1.5px solid ${borderColor}`, backdropFilter: 'blur(2px)' }}>
                 <QRCodeCanvas value={qrData} size={228} level="H" />
@@ -203,8 +203,8 @@ function BoardingPass({ person }) {
             {AIRLINE}
           </div>
 
-          <div style={{ flex: 1, padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: '10px', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', background: 'transparent', borderRadius: 0, padding: 0, overflow: 'visible' }}>
+          <div style={{ flex: 1, padding: '6px 14px 8px', display: 'flex', flexDirection: 'column', gap: '8px', justifyContent: 'flex-start' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', background: 'transparent', borderRadius: 0, padding: 0, marginBottom: '2px', overflow: 'visible' }}>
               <Seal color={accentColor} size={80} />
             </div>
 
