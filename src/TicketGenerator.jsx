@@ -213,7 +213,17 @@ function BoardingPass({ person }) {
 
             <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '6px 10px' }}>
               <div style={{ fontSize: '9px', color: labelColor, fontWeight: 700, letterSpacing: '1px', marginBottom: '4px' }}>NAME</div>
-              <div style={{ fontSize: '20px', fontWeight: 900, color: valueColor, letterSpacing: '1px', wordBreak: 'break-all' }}>
+              <div
+                style={{
+                  fontSize: '20px',
+                  fontWeight: 900,
+                  color: valueColor,
+                  letterSpacing: '1px',
+                  wordBreak: 'normal',
+                  overflowWrap: 'normal',
+                  whiteSpace: person.name.includes(' ') ? 'normal' : 'nowrap',
+                }}
+              >
                 {person.name}
               </div>
             </div>
