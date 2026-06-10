@@ -186,7 +186,7 @@ function BoardingPass({ person }) {
                 </div>
               </div>
 
-              <div style={{ fontSize: '8px', color: '#777', lineHeight: 1.35, padding: '8px 8px', minHeight: '72px', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.72)', borderRadius: '4px', textAlign: 'center' }}>
+              <div style={{ fontSize: '8px', color: '#777', lineHeight: 1.35, padding: '2px 2px', minHeight: '72px', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.72)', borderRadius: '4px', textAlign: 'center' }}>
                 <div style={{ fontWeight: 700 }}>重要提示: 登机口于起飞前10分钟关闭</div>
                 <div>NOTICE: GATES WILL BE CLOSED 10 MINUTES BEFORE DEPARTURE TIME</div>
               </div>
