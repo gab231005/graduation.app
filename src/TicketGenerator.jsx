@@ -91,7 +91,7 @@ function BoardingPass({ person }) {
       style={{
         width: '100%',
         maxWidth: '940px',
-        aspectRatio: '2.5 / 1',
+        aspectRatio: '3.15 / 1',
         backgroundColor: isGraduate ? 'transparent' : '#ffffff',
         backgroundImage: isGraduate
           ? `linear-gradient(rgba(255,255,255,0.50), rgba(255,255,255,0.50)), url(${diamondBackground})`
