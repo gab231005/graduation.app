@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { QRCodeCanvas } from 'qrcode.react'
 import html2canvas from 'html2canvas'
 import { supabase } from './lib/supabase'
+import logoDoodle from './assets/logo_doodle.png'
 
 const FLIGHT_NO = 'GD2026'
 const TIME = '18:00'
@@ -46,13 +47,13 @@ function Seal({ color = '#c9a227', size = 72 }) {
     return (
       <svg width={size} height={size} viewBox="0 0 72 72">
         <circle cx="36" cy="36" r="34" fill="none" stroke={color} strokeWidth="2.5" />
-        <text x="36" y="40" textAnchor="middle" fontSize="7" fontWeight="700" fill={color} fontFamily="serif">SMTM 主恩大专</text>
+        <text x="36" y="40" textAnchor="middle" fontSize="7" fontWeight="700" fill={color} fontFamily="serif">SMTM</text>
       </svg>
     )
   }
   return (
     <img
-      src="/src/assets/logo_doodle.png"
+      src={logoDoodle}
       alt="SMTM 主恩大专"
       style={{ width: '170px', height: '115px', objectFit: 'contain' }}
       onError={() => setImgFailed(true)}
