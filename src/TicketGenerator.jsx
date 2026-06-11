@@ -267,6 +267,7 @@ function TicketGenerator() {
 
   const searchParticipants = async () => {
     const trimmedQuery = query.trim()
+    const normalizedQuery = trimmedQuery.toLowerCase()
 
     if (!trimmedQuery) {
       setParticipants([])
@@ -282,13 +283,16 @@ function TicketGenerator() {
 
     setIsSearching(true)
     setLoadError('')
-    setMessage('正在查询姓名...')
+    setMessage(normalizedQuery === 'all' ? '正在查询全部人员...' : '正在查询姓名...')
 
-    const { data, error } = await supabase
+    const request = supabase
       .from('guests')
       .select('id,name,group_num,type')
-      .ilike('name', `%${trimmedQuery}%`)
       .order('name', { ascending: true })
+
+    const { data, error } = normalizedQuery === 'all'
+      ? await request
+      : await request.ilike('name', `%${trimmedQuery}%`)
 
     setIsSearching(false)
 
@@ -302,12 +306,16 @@ function TicketGenerator() {
 
     if (!data?.length) {
       setParticipants([])
-      setMessage('未找到匹配姓名，请检查是否为完整姓名或重新输入。')
+      setMessage(normalizedQuery === 'all'
+        ? '未找到任何人员记录。'
+        : '未找到匹配姓名，请检查是否为完整姓名或重新输入。')
       return
     }
 
     setParticipants(data)
-    setMessage(`已找到 ${data.length} 位匹配人员。`)
+    setMessage(normalizedQuery === 'all'
+      ? `已加载全部 ${data.length} 位人员。`
+      : `已找到 ${data.length} 位匹配人员。`)
   }
 
   const downloadTicketAsPNG = async (personId, personName) => {
