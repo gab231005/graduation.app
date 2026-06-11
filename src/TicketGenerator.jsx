@@ -262,6 +262,7 @@ function TicketGenerator() {
   const [query, setQuery] = useState('')
   const [participants, setParticipants] = useState([])
   const [isSearching, setIsSearching] = useState(false)
+  const [isDownloadingAll, setIsDownloadingAll] = useState(false)
   const [message, setMessage] = useState('请输入姓名，系统会自动从 Supabase 匹配并生成机票。')
   const [loadError, setLoadError] = useState('')
 
@@ -335,6 +336,22 @@ function TicketGenerator() {
     } catch (error) {
       console.error('Failed to generate image:', error)
       alert('图片生成失败')
+    }
+  }
+
+  const downloadAllTicketsAsPNG = async () => {
+    if (!participants.length || isDownloadingAll) return
+
+    setIsDownloadingAll(true)
+    setMessage(`正在下载全部 ${participants.length} 张机票...`)
+
+    try {
+      for (const person of participants) {
+        await downloadTicketAsPNG(person.id, person.name)
+      }
+      setMessage(`已开始下载全部 ${participants.length} 张机票。`)
+    } finally {
+      setIsDownloadingAll(false)
     }
   }
 
@@ -478,6 +495,37 @@ function TicketGenerator() {
               background: '#f0efe9',
             }}>{message}</span>
             <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to left, transparent, #c9a22755)' }} />
+          </div>
+        )}
+
+        {participants.length > 0 && (
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '28px' }}>
+            <button
+              type="button"
+              onClick={downloadAllTicketsAsPNG}
+              disabled={isDownloadingAll}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '10px',
+                padding: '12px 34px',
+                border: 'none',
+                background: isDownloadingAll ? '#6b7280' : 'linear-gradient(135deg, #c9a227 0%, #e2b93d 100%)',
+                color: '#0b1a33',
+                fontWeight: 900,
+                fontSize: '13px',
+                cursor: isDownloadingAll ? 'not-allowed' : 'pointer',
+                letterSpacing: '2.2px',
+                fontFamily: 'inherit',
+                borderRadius: '4px',
+                boxShadow: '0 2px 0 #c9a22799, 0 8px 24px rgba(11,26,51,0.22)',
+                textTransform: 'uppercase',
+                opacity: isDownloadingAll ? 0.8 : 1,
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1v8M7 9l-3-3M7 9l3-3M1 11h12" stroke="#0b1a33" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              {isDownloadingAll ? '下载中...' : '下载全部 PNG'}
+            </button>
           </div>
         )}
 
