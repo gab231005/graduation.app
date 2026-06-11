@@ -2,7 +2,7 @@
 import { QRCodeCanvas } from 'qrcode.react'
 import html2canvas from 'html2canvas'
 import { supabase } from './lib/supabase'
-import logoDoodle from './assets/logo_doodle.png'
+import logoDoodle from './assets/Black.png'
 import diamondBackground from './assets/images.jpg'
 
 const FLIGHT_NO = 'BKI2026'
