@@ -6,7 +6,7 @@ import logoDoodle from './assets/Black.png'
 import diamondBackground from './assets/images.jpg'
 
 const FLIGHT_NO = 'BKI2026'
-const TIME = '18:00'
+const TIME = '19:00'
 const DATE = '13 JUNE 2026'
 const GATE = '01'
 const AIRLINE = 'SMTM 主恩大专'
