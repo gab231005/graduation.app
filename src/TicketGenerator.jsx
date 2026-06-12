@@ -140,7 +140,7 @@ function BoardingPass({ person }) {
 
               <div style={{ border: `1.5px solid ${borderColor}`, borderRadius: '4px', padding: '6px 8px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(2px)' }}>
                 <div style={{ fontSize: '18px', color: labelColor, fontWeight: 1000, letterSpacing: '1px' }}>BOARDING GATE</div>
-                <div style={{ fontSize: '15px', fontWeight: 1200, color: valueColor, lineHeight: 1.1, letterSpacing: '1px' }}>主恩堂圣堂</div>
+                <div style={{ fontSize: '15px', fontWeight: 1200, color: valueColor, lineHeight: 1.1, letterSpacing: '1px' }}>主恩堂妈妈室</div>
               </div>
             </div>
 
