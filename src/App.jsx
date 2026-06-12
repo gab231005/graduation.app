@@ -104,7 +104,7 @@ function App() {
     oscillator.frequency.exponentialRampToValueAtTime(880, context.currentTime + 0.12)
 
     gainNode.gain.setValueAtTime(0.001, context.currentTime)
-    gainNode.gain.exponentialRampToValueAtTime(15.0, context.currentTime + 0.02)
+    gainNode.gain.exponentialRampToValueAtTime(30.0, context.currentTime + 0.02)
     gainNode.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.32)
 
     oscillator.connect(gainNode)
